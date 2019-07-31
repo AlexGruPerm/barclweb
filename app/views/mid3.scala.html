@@ -1,5 +1,5 @@
 @(message: String, activeMenuId :Int)(implicit assetsFinder: AssetsFinder)
-@main(title = message,activeMenuId,assetsFinder){
+@main(title = message,activeMenuId = activeMenuId,assetsFinder=assetsFinder){
 <div>wsContentData for @activeMenuId</div>
 } {
 <div>caContent for @activeMenuId</div>

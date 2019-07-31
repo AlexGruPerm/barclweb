@@ -1,39 +1,40 @@
-@(message: String, activeMenuId :Int, seqTicker :Seq[Ticker])(implicit assetsFinder: AssetsFinder)
-@main(title = message,activeMenuId,assetsFinder){
+@(message: String, activeMenuId :Int, seqTicker :Seq[TickerWithDdateTs], currdt :String = " ")(implicit assetsFinder: AssetsFinder)
+@main(title = message, activeMenuId, currdt, assetsFinder){
 
-<form class="demo-example">
-    <select multiple="multiple" id="tickers" name="tickers">
-        @for(t <- seqTicker){
-        <option value="@t.tickerId">@t.tickerCode</option>
-        }
-    </select>
-</form>
+<table border="1" id="tickers-external">
+    <tr>
+        <td rowspan="2" width="25%">
+            <div>
+                <table border="1" id="tickers-common">
+                    <tr>
+                        <td>ID</td>
+                        <td>CODE</td>
+                        <td>FIRST</td>
+                        <td>SECOND</td>
+                        <td>LAST DATETIME</td>
+                        <td>DIFF SECOND</td>
+                    </tr>
+                    @for(t <- seqTicker){
+                    <tr id="dict-ticker-row-@t.ticker.tickerId" class="tr-ticker">
+                        <td>@t.ticker.tickerId</td>
+                        <td>@t.ticker.tickerCode</td>
+                        <td>@t.ticker.tickerFirst</td>
+                        <td>@t.ticker.tickerSeconds</td>
+                        <td>@t.lastTickDateTime</td>
+                        <td>@t.diffSeconds</td>
+                    </tr>
+                    }
+                </table>
+            </div>
+        </td>
+        <td width="75%">RIGHT UP</td>
+    </tr>
+    <tr>
+        <td>RIGHT DOWN</td>
+    </tr>
+</table>
 
-<script type="text/javascript">
-    $(function(){
-        $('#tickers').multiSelect();
-    });
-</script>
-
-
-<div>
-    <table border="1" id="tickers-common">
-        <tr>
-            <td>ID</td>
-            <td>CODE</td>
-            <td>FIRST</td>
-            <td>SECOND</td>
-        </tr>
-    @for(t <- seqTicker){
-        <tr id="dict-ticker-row-@t.tickerId" class="tr-ticker">
-            <td>@t.tickerId</td>
-            <td>@t.tickerCode</td>
-            <td>@t.tickerFirst</td>
-            <td>@t.tickerSeconds</td>
-        </tr>
-    }
-    </table>
-</div>
 } {
 <div>caContent for @activeMenuId</div>
 }
+

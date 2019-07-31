@@ -20,6 +20,15 @@ table#tickers-common{
                      border-collapse: collapse;
                      border-spacing: 0;
                      border: 1px solid black;
+                     margin-right: 10px;
+                     width:100%;
+                     font-size: 13px;
+                    }
+
+table#tickers-external{
+                     border-collapse: collapse;
+                     border-spacing: 0;
+                     border: 1px solid red;
                      margin-right: 20px;
                      width:100%;
                     }
