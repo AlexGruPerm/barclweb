@@ -1,0 +1,39 @@
+@(message: String, activeMenuId :Int, seqTicker :Seq[Ticker])(implicit assetsFinder: AssetsFinder)
+@main(title = message,activeMenuId,assetsFinder){
+
+<form class="demo-example">
+    <select multiple="multiple" id="tickers" name="tickers">
+        @for(t <- seqTicker){
+        <option value="@t.tickerId">@t.tickerCode</option>
+        }
+    </select>
+</form>
+
+<script type="text/javascript">
+    $(function(){
+        $('#tickers').multiSelect();
+    });
+</script>
+
+
+<div>
+    <table border="1" id="tickers-common">
+        <tr>
+            <td>ID</td>
+            <td>CODE</td>
+            <td>FIRST</td>
+            <td>SECOND</td>
+        </tr>
+    @for(t <- seqTicker){
+        <tr id="dict-ticker-row-@t.tickerId" class="tr-ticker">
+            <td>@t.tickerId</td>
+            <td>@t.tickerCode</td>
+            <td>@t.tickerFirst</td>
+            <td>@t.tickerSeconds</td>
+        </tr>
+    }
+    </table>
+</div>
+} {
+<div>caContent for @activeMenuId</div>
+}

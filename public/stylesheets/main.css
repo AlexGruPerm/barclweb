@@ -4,103 +4,22 @@
 }
 
 html, body {
-    height: 100%;
+    height: 95%;
 }
 
-div#wdt1000px{
-              width : 96%;
-              }
 
-        div#div-container{
-                 display:flex;
-                 white-space: nowrap;
-                 border-style: solid;
-                 border-width: thin;
-                 border-color: grey;
-                 width:99%;
-                 height:300px;
-                 background: WhiteSmoke;
-                 overflow: scroll;
+table#teable-main{
+                  border-collapse: collapse;
+                  border-spacing: 0;
+                  border: 1px solid grey;
+                  margin-right: 20px;
+                  width:100%;
                  }
 
-        div#patt-search-div{
-                 flex:1;
-                 overflow: auto;
-                 border:1px solid black;
-                 width:33%;
-                 height:98%;
-                 margin:1px;
-                 background: white;
-                }
-
-        div#bars-graph{
-                 flex:1;
-                 overflow: auto;
-                 border:1px solid black;
-                 width:33%;
-                 height:98%;
-                 margin:1px;
-                 background: white;
-                }
-
-        div#curr-pattern{
-                 flex:1;
-                 overflow: auto;
-                 border:1px solid black;
-                 width:32%;
-                 height:98%;
-                 margin:1px;
-                 background: white;
-                }
-
-div.demo-container {
-	box-sizing: border-box;
-	width: 500px;
-	height: 250px;
-	padding: 20px 15px 15px 15px;
-	margin: 15px auto 30px auto;
-	border: 1px solid #ddd;
-	background: #fff;
-	background: linear-gradient(#f6f6f6 0, #fff 50px);
-	background: -o-linear-gradient(#f6f6f6 0, #fff 50px);
-	background: -ms-linear-gradient(#f6f6f6 0, #fff 50px);
-	background: -moz-linear-gradient(#f6f6f6 0, #fff 50px);
-	background: -webkit-linear-gradient(#f6f6f6 0, #fff 50px);
-	box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-	-o-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-	-ms-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-	-moz-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-	-webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-}
-
-div.demo-placeholder {
-	width: 100%;
-	height: 100%;
-	font-size: 14px;
-	line-height: 1.2em;
-}
-
-
-table#patt-search-main{
+table#tickers-common{
                      border-collapse: collapse;
                      border-spacing: 0;
-                     border: 1px solid grey;
+                     border: 1px solid black;
                      margin-right: 20px;
                      width:100%;
-                    }
-
-   td.patts-thead-td{
-                     border-style: solid;
-                     border-width: thin;
-                     border-color: black;
-                     font-size: 100%;
-                    }
-
- td.patt-search-cell{
-                     border-style: solid;
-                     border-width: thin;
-                     border-color: green;
-                     font-family: serif;
-                     font-size: 100%;
-                     text-align: center;
                     }

@@ -1,18 +1,37 @@
-@(title: String, assetsFinder: AssetsFinder)(content: Html)
+@(title: String, activeMenuId :Int, assetsFinder: AssetsFinder)(wsContent: Html)(caContent: Html)
 <!DOCTYPE html>
 <html>
 <head>
     <title>@title</title>
-    <link rel="stylesheet" media="screen" href="@assetsFinder.path("stylesheets/main.css")">
+
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")">
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/example-styles.css")">
+
+    <script src="@routes.Assets.at("javascripts/jquery-2.2.4.min.js")"></script>
+    <script src="@routes.Assets.at("javascripts/jquery.multi-select.js")"></script>
+    <script src="@routes.Assets.at("javascripts/bars-graph.js")"></script>
 </head>
 <body>
 
-<table>
-
+<table border="1" width=100% id="teable-main">
+    <tr>
+        <td width=20%>menu</td>
+        <td>worksheet</td>
+    </tr>
+    <tr>
+        <td>
+            @menu(activeMenuId)
+        </td>
+        <td>
+            <section class="wscontent">
+                @wsContent
+            </section>
+        </td>
+    </tr>
+    <tr>
+        <td width=100% colspan=2>@caContent</td>
+    </tr>
 </table>
 
-<section class="content">
-    @content
-</section>
 </body>
 </html>

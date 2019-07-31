@@ -1,1 +1,7 @@
-GET     /      controllers.HomeController.index
+GET     /              controllers.HomeController.index
+GET     /mid1          controllers.MenuId1.midAction
+GET     /mid2          controllers.MenuId2.midAction
+GET     /mid3          controllers.MenuId3.midAction
+GET     /mid4          controllers.MenuId4.midAction
+GET     /mid5          controllers.MenuId5.midAction
+GET     /assets/*file  controllers.Assets.at(path="/public", file)

@@ -1,0 +1,18 @@
+@(activeMenuId :Int)
+@require(Seq(1,2,3,4,5).contains(activeMenuId),"Incorrect menuId")
+
+@menuCont = @{Seq(
+                  (1,"Menu1"),
+                  (2,"Menu2"),
+                  (3,"Menu3"),
+                  (4,"Menu4"),
+                  (5,"Menu5")
+                 )}
+
+@for((k,v) <- menuCont.sortBy(elm => elm._1)) {
+  @if(k == activeMenuId){
+    <div>@v</div>
+  }else{
+    <div><a href="/mid@k">@v</a></div>
+  }
+}

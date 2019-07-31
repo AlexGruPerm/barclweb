@@ -1,25 +1,21 @@
 package controllers
 
 import javax.inject._
-
+import play.api.Logger
 import play.api.mvc._
 
-/**
-  * This controller creates an `Action` to handle HTTP requests to the
-  * application's home page.
-  */
 @Singleton
 class HomeController @Inject()(cc: ControllerComponents) (implicit assetsFinder: AssetsFinder)
   extends AbstractController(cc) {
+  val log: Logger = Logger(this.getClass())
+  log.info("Constructor "+this.getClass.getName)
 
-  /**
-    * Create an Action to render an HTML page with a welcome message.
-    * The configuration in the `routes` file means that this method
-    * will be called when the application receives a `GET` request with
-    * a path of `/`.
-    */
   def index = Action {
-    Ok(views.html.index("MTSWEB v2222. application."))
+    log.info(this.getClass.getName+" index")
+    Redirect(routes.MenuId1.midAction())
+    /*
+    Ok(views.html.index("mid1",1))
+    */
   }
 
 }
