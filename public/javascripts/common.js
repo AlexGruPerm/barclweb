@@ -17,12 +17,12 @@ function funcOnClickExecBUtton() {
    };
   if (tickersSelectedArray.length!=0){
   console.log("Selected tickersID = "+tickersSelectedArray)
-//---------------------------------------------------------------
-    postAjax('/barsstat', {tickersId:[tickersSelectedArray]}, function(data){
+//---------------------------------------------------------------------------
+    postAjax('/barsstat',{"tickersId":tickersSelectedArray}, function(data){
       console.log(data);
       document.getElementById("right-up").innerHTML = data;
     });
-//---------------------------------------------------------------
+//---------------------------------------------------------------------------
   } else {
   console.log("There is no selected tickers.")
   }
@@ -75,19 +75,15 @@ function ajax_get(url, callback) {
     xmlhttp.send();
 }
 
-function postAjax(url, data, success) {
-    console.log("POST AJAX BEGIN to "+url+" data="+data)
-    var params = typeof data == 'string' ? data : Object.keys(data).map(
-            function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
-        ).join('&');
 
+function postAjax(url, data, success) {
     var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     xhr.open('POST', url);
+    xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = function() {
         if (xhr.readyState>3 && xhr.status==200) { success(xhr.responseText); }
     };
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    var params = JSON.stringify(data);
     xhr.send(params);
     return xhr;
 }
