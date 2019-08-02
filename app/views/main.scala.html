@@ -4,14 +4,16 @@
 <head>
     <title>@title</title>
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")">
-    <script src="@routes.Assets.at("javascripts/bars-graph.js")"></script>
+    <script src="@routes.Assets.at("javascripts/common.js")"></script>
 </head>
 <body>
 
 <table border="1" width=100% id="teable-main">
     <tr>
         <td width=20%>menu</td>
-        <td>Current DateTime = @currdt</td>
+        <td>Current DateTime = @currdt
+         <input type="button" id="exec" onclick="funcOnClickExecBUtton()" value="EXECUTE">
+        </td>
     </tr>
     <tr>
         <td>

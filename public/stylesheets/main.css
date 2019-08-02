@@ -7,7 +7,6 @@ html, body {
     height: 95%;
 }
 
-
 table#teable-main{
                   border-collapse: collapse;
                   border-spacing: 0;
@@ -32,3 +31,32 @@ table#tickers-external{
                      margin-right: 20px;
                      width:100%;
                     }
+
+table#tickers-common{
+                     border-collapse: collapse;
+                     border-spacing: 0;
+                     border: 1px solid black;
+                     margin-right: 10px;
+                     width:100%;
+                     font-size: 13px;
+                    }
+
+tr.tr-ticker {}
+
+tr.tr-ticker-selected {
+  background-color: #FCF3CF;
+}
+
+tr.tr-ticker:hover {
+  color: #34495E;
+  background-color: #CACFD2;
+  font-weight: bold;
+  border-color: #283747;
+}
+
+tr.tr-ticker:hover {
+  color: #34495E;
+  background-color: #CACFD2;
+  font-weight: bold;
+  border-color: #283747;
+}
