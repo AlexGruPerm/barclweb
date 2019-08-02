@@ -25,8 +25,14 @@ class Bars @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsFind
       val json = request.body.asJson
       log.info("request.body.asJson="+request.body.asJson)
 
+
+
       val jsonBody: Option[JsValue] = request.contentType match {
-            case Some(MimeTypes.JSON) => {log.info("yes, json")
+            case Some(MimeTypes.JSON) => {
+              log.info("yes, json")
+
+              val seqTickerIs = (request.body.asJson \\ "sub-categories").as[List[Map[String, String]]]
+
               request.body.asJson
             }
             case _ => {
@@ -35,6 +41,8 @@ class Bars @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsFind
             }
           }
       log.info("jsonBody="+jsonBody)
+
+
 
       Ok(views.html.barsstats("Hello"+(
         jsonBody match {
