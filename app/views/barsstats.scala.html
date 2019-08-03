@@ -1,2 +1,2 @@
-@(message: String)(implicit assetsFinder: AssetsFinder)
-<div>@message</div>
+@(message: String, seqTickers :Seq[Int])(implicit assetsFinder: AssetsFinder)
+<div>@message @seqTickers</div>
