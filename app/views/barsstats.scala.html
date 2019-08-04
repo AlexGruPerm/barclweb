@@ -1,24 +1,24 @@
-@(message: String, seqTickersBws :Seq[TickerBws])(implicit assetsFinder: AssetsFinder)
-<div>@message @seqTickersBws</div></br>
+@(message: String, seqTickersBws :Seq[LastBar])(implicit assetsFinder: AssetsFinder)
+<div>@message</div></br>
+<div style="overflow:auto;">
 <table border="1"  id="tickers-bws-common">
     <tr>
-        <td>ID_</td>
         <td>CODE</td>
         <td>BWS(sec.)</td>
+        <td>LASTBAR(datetime)</td>
+        <td>LASTTICK(datetime)</td>
+        <td>DIFF TO CURRTS(sec.)</td>
+        <td>DIFF TO LASTTICK(sec.)</td>
     </tr>
     @for(t <- seqTickersBws){
-    <tr>
-        <td>@t.ticker.tickerId</td>
-        <td>@t.ticker.tickerCode</td>
+    <tr id="tickerbws-@t.tickerWithDts.ticker.tickerId-@t.bws" class="tr-tickerbws">
+        <td>@t.tickerWithDts.ticker.tickerCode</td>
         <td>@t.bws</td>
+        <td>@t.lastBarDateTime</td>
+        <td>@t.tickerWithDts.lastTickDateTime</td>
+        <td>@t.diffSecondsToCurr</td>
+        <td>@t.diffSecondsToLastTick</td>
     </tr>
     }
 </table>
-
-@****************************************************************************************************
-case class Ticker(tickerId :Int, tickerCode :String, tickerFirst :String, tickerSeconds :String)
-case class TickerBws(
-ticker :Ticker,
-bws    :Int
-)
-****************************************************************************************************@
+</div>

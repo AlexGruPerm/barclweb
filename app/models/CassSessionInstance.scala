@@ -6,7 +6,10 @@ import com.datastax.oss.driver.api.core.CqlSession
 import com.datastax.oss.driver.api.core.cql.BoundStatement
 import models.CommRowConverters._
 
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration.Duration
 import scala.jdk.CollectionConverters._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object CassSessionInstance extends CassSession{
 
@@ -19,6 +22,9 @@ object CassSessionInstance extends CassSession{
   private val prepBCalcProps :BoundStatement = prepareSql(sess,sqlBCalcProps)
   private val prepLastTickDdate :BoundStatement = prepareSql(sess,sqlLastTickDdate)
   private val prepLastTickTs :BoundStatement = prepareSql(sess,sqlLastTickTs)
+  private val prepBarsBwsCodeStats :BoundStatement = prepareSql(sess,sqlBarsBwsCodeStats)
+  private val prepBarByDateTs :BoundStatement = prepareSql(sess,sqlBarByDateTs)
+
 
   private def tickersDictReader: Seq[Ticker] = sess.execute(prepTickersDict).all().iterator.asScala
     .map(rowToTicker).toList.filter(tck => tck.tickerId < 30).sortBy(_.tickerId)
@@ -48,22 +54,60 @@ object CassSessionInstance extends CassSession{
       .setInt("tickerId",ticker.tickerId)
       .setLocalDate("pDdate",getTickerMaxDdate(ticker))).one().getLong("db_tsunx")
 
-  def getLastBarsByTickers(seqTickersId :Seq[Int]):Seq[TickerBws] =
-    getTickersBws(tickersDict.filter(td => seqTickersId.contains(td.tickerId)))
 
 
-  /**
-   * We need Leave only tickers for which exists bar property
-   */
-  /*
-  def getTickersWithBws :Seq[TickerBws] =
-    getFirstTicksMeta
-      .flatMap(thisTicker =>
-        getAllBarsProperties.collect{
-          case bp if bp.tickerId == thisTicker.tickerId => TickerBws(thisTicker,bp.bws)
+  def getBars(thisTickerBws: TickerBws,thisTickerWithDdateTs :TickerWithDdateTs,currTimestamp :Long): Seq[LastBar] = {
+    sess.execute(prepBarsBwsCodeStats
+        .setInt("tickerID",thisTickerBws.ticker.tickerId)
+        .setInt("bws",thisTickerBws.bws)
+    ).all().iterator.asScala.toSeq.map(row => (row.getLocalDate("ddate"),row.getLong("ts_end_max")))
+        .collect{
+          case lastBarStat =>
+            val (lastBarDdate :LocalDate, lastBarTs :Long) = lastBarStat
+            sess.execute(prepBarByDateTs
+              .setInt("tickerID", thisTickerBws.ticker.tickerId)
+              .setLocalDate("pDdate", lastBarDdate)
+              .setInt("bws",thisTickerBws.bws)
+              .setLong("ts", lastBarTs)
+            ).all().iterator.asScala.toSeq.map(row => rowToLastBar(currTimestamp,thisTickerWithDdateTs,row)).toList.head
         }
+  }
+
+  def getLastBarsByTickers(seqTickersId :Seq[Int]) :Seq[LastBar] = {
+
+    val seqTickerBws :Seq[TickerBws] = getTickersBws(tickersDict.filter(td => seqTickersId.contains(td.tickerId)))
+    log.info("getLastBarsByTickers seqTickerBws.size="+seqTickerBws.size)
+
+    val currTimestamp :Long = System.currentTimeMillis
+
+    val futs: Seq[Future[TickerWithDdateTs]] = seqTickerBws.map(tbws => tbws.ticker).distinct
+      .map(t => Future(TickerWithDdateTs(t, getTickerLastTs(t), currTimestamp)))
+
+    val seqTickersDdateTs :Seq[TickerWithDdateTs] = Await.result(Future.sequence(futs), Duration.Inf)
+      .sortBy(elm => elm.diffSeconds)(Ordering[Long])
+
+    val seqLastBarsFuts :Seq[Future[Seq[LastBar]]] = seqTickerBws
+      .flatMap(tbws => seqTickersDdateTs
+        .withFilter(twd => twd.ticker.tickerId == tbws.ticker.tickerId) //todo: ticker == ticker
+        .flatMap(twdf => Seq(Future(getBars(tbws,twdf,currTimestamp))))
       )
-  */
+
+    val seqLastBars :Seq[LastBar] = Await.result(Future.sequence(seqLastBarsFuts), Duration.Inf).flatten
+
+    /*
+    val seqLastBars :Seq[LastBar] = seqTickerBws
+      .flatMap(tbws => seqTickersDdateTs
+        .withFilter(twd => twd.ticker.tickerId == tbws.ticker.tickerId) //todo: ticker == ticker
+        .flatMap(twdf => getBars(tbws,twdf,currTimestamp))
+    )
+
+    val seqLastBars :Seq[LastBar] = Await.result(Future.sequence(seqLastBarsFuts), Duration.Inf)
+    */
+
+    seqLastBars
+  }
+
+
 
 
 

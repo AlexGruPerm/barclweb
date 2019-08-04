@@ -2,7 +2,7 @@ package controllers
 
 import app.Global
 import javax.inject._
-import models.{CommonFuncs, TickerBws}
+import models.{CommonFuncs, LastBar, TickerBws}
 import play.api.Logger
 import play.api.http.MimeTypes
 import play.api.libs.json._
@@ -27,7 +27,12 @@ class Bars @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsFind
             case Some(tickersArray) => {
               val seqTickers :Seq[Int] =  tickersArray.value.map(v => v.as[String].toInt).toSeq
               log.info("seqTickers="+seqTickers)
-              val seqLastBars :Seq[TickerBws] = sess.getLastBarsByTickers(seqTickers)//todo: move to line down.
+
+              val t1 = System.currentTimeMillis
+              val seqLastBars :Seq[LastBar] = sess.getLastBarsByTickers(seqTickers)
+              val durrS :Double = (System.currentTimeMillis-t1).toDouble/1000.toDouble
+              log.info(s"Duration $durrS s. seqLastBars size=${seqLastBars.size}")
+
               Ok(views.html.barsstats("Hello",seqLastBars))
             }
             case None => BadRequest("Request must be Json with parameter 'tickersId' : [array of tickerId.] ")

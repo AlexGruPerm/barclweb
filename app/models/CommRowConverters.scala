@@ -19,4 +19,18 @@ object CommRowConverters {
       row.getInt("is_enabled")
     )
 
+  val rowToLastBar :((Long,TickerWithDdateTs,Row) => LastBar) = (currTs :Long, thisTickerWithDdateTs :TickerWithDdateTs,row :Row) =>
+    LastBar(
+      thisTickerWithDdateTs,
+      currTs,
+      row.getLocalDate("ddate"),
+      row.getInt("bar_width_sec"),
+      row.getLong("ts_begin"),
+      row.getLong("ts_end"),
+      row.getString("btype"),
+      row.getDouble("o"),
+      row.getDouble("c"),
+      row.getInt("ticks_cnt")
+    )
+
 }

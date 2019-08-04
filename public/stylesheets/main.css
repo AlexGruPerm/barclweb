@@ -44,7 +44,7 @@ table#tickers-common{
 table#tickers-bws-common{
                      border-collapse: collapse;
                      border-spacing: 0;
-                     border: 1px solid blue;
+                     border: 1px solid black;
                      margin-right: 10px;
                      width:100%;
                      font-size: 13px;
@@ -63,7 +63,9 @@ tr.tr-ticker:hover {
   border-color: #283747;
 }
 
-tr.tr-ticker:hover {
+tr.tr-tickerbws {}
+
+tr.tr-tickerbws:hover {
   color: #34495E;
   background-color: #CACFD2;
   font-weight: bold;

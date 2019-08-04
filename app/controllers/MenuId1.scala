@@ -38,6 +38,7 @@ class MenuId1 @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsF
      * [info] c.MenuId1 - Duration 0.161 s. size=28
      *
     */
+      //todo : remove this 4 lines into method in sess.
     val t1 = System.currentTimeMillis
     val currTimestamp :Long = System.currentTimeMillis
     val futs: Seq[Future[TickerWithDdateTs]] = tickersFrx
@@ -46,7 +47,7 @@ class MenuId1 @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsF
       .sortBy(elm => elm.diffSeconds)(Ordering[Long])
 
     val durrS :Double = (System.currentTimeMillis-t1).toDouble/1000.toDouble
-    log.info(s"Duration $durrS s. size=${seqTickersDdateTs.size}")
+    log.info(s"Duration $durrS s. seqTickersDdateTs size=${seqTickersDdateTs.size}")
 
     //todo: we can use here tiny Futures for parallel getting max ddate,ts (s)
     Ok(views.html.mid1("mid1",1,seqTickersDdateTs,currentDateTime))
