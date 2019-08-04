@@ -17,3 +17,19 @@ case class TickerBws(
                       ticker :Ticker,
                       bws    :Int
                     )
+
+
+/*
+case class Bar(
+                tickerId :Int,
+                tickerCode :String,
+                ddate :LocalDate,
+                barWidthSec :Int,
+                tsBegin :Long,
+                tsEnd :Long,
+                bType :String,
+                o :Double,
+                c :Double,
+                ticksCnt :Int
+              )
+*/

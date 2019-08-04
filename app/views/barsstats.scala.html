@@ -1,2 +1,24 @@
-@(message: String, seqTickers :Seq[Int])(implicit assetsFinder: AssetsFinder)
-<div>@message @seqTickers</div>
+@(message: String, seqTickersBws :Seq[TickerBws])(implicit assetsFinder: AssetsFinder)
+<div>@message @seqTickersBws</div></br>
+<table border="1" id="tickers-bws-common">
+    <tr>
+        <td>ID</td>
+        <td>CODE</td>
+        <td>BWS(sec.)</td>
+    </tr>
+    @for(t <- seqTickersBws){
+    <tr>
+        <td>@t.ticker.tickerId</td>
+        <td>@t.ticker.tickerCode</td>
+        <td>@t.bws</td>
+    </tr>
+    }
+</table>
+
+@****************************************************************************************************
+case class Ticker(tickerId :Int, tickerCode :String, tickerFirst :String, tickerSeconds :String)
+case class TickerBws(
+ticker :Ticker,
+bws    :Int
+)
+****************************************************************************************************@

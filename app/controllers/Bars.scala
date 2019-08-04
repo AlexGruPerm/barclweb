@@ -1,77 +1,41 @@
 package controllers
 
+import app.Global
 import javax.inject._
+import models.{CommonFuncs, TickerBws}
 import play.api.Logger
 import play.api.http.MimeTypes
 import play.api.libs.json._
-import play.api.mvc.{request, _}
+import play.api.mvc._
 
 
 
 @Singleton
 class Bars @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsFinder)
-  extends AbstractController(cc) {
+  extends AbstractController(cc) with CommonFuncs {
   val log: Logger = Logger(this.getClass())
   log.info("Constructor "+this.getClass.getName)
-
-  /*
-  def barsstat =
-    Action { request =>
-      log.info("request.body= "+request.body)
-      val jsonBody: Option[JsValue] = request.contentType match {
-            case Some(MimeTypes.JSON) => {
-              log.info("yes, json")
-              val json :Option[JsValue] = request.body.asJson
-              log.info("json = "+json)
-
-              /*
-              val seqTickerIs = Json.parse(request.body.asText.getOrElse(" ")).as[JsObject]
-              log.info("!!!!!! seqTickerIs="+seqTickerIs)
-              */
-              json
-            }
-            case _ => {
-              log.info("xz, any")
-            None
-            }
-          }
-      log.info("jsonBody="+jsonBody)
-      Ok(views.html.barsstats("Hello"+(
-        jsonBody match {
-          case Some(jv) => jv
-          case None => "None"
-        }
-      )))
-    }
-*/
-
-
+  val sess  = Global.sessInstance
 
   def barsstat = Action(parse.json) {
     request => {
-      //log.info(request.body.toString())
-
       request.contentType match {
         case Some(MimeTypes.JSON) => {
           val tickerSeq :Option[JsArray] = (request.body \ "tickersId").asOpt[JsArray]
           log.info("tickerSeq="+tickerSeq)
-
           tickerSeq match {
             case Some(tickersArray) => {
-
               val seqTickers :Seq[Int] =  tickersArray.value.map(v => v.as[String].toInt).toSeq
               log.info("seqTickers="+seqTickers)
-
-              Ok(views.html.barsstats("Hello",seqTickers))
+              val seqLastBars :Seq[TickerBws] = sess.getLastBarsByTickers(seqTickers)//todo: move to line down.
+              Ok(views.html.barsstats("Hello",seqLastBars))
             }
             case None => BadRequest("Request must be Json with parameter 'tickersId' : [array of tickerId.] ")
           }
-
         }
         case None => BadRequest("Request must be Json with parameter 'tickersId' : [array of tickerId.] ")
       }
-
-      }
+    }
   }
 
 

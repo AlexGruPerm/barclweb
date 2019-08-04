@@ -20,11 +20,15 @@ object CassSessionInstance extends CassSession{
   private val prepLastTickDdate :BoundStatement = prepareSql(sess,sqlLastTickDdate)
   private val prepLastTickTs :BoundStatement = prepareSql(sess,sqlLastTickTs)
 
-  def tickersDict: Seq[Ticker] = sess.execute(prepTickersDict).all().iterator.asScala
+  private def tickersDictReader: Seq[Ticker] = sess.execute(prepTickersDict).all().iterator.asScala
     .map(rowToTicker).toList.filter(tck => tck.tickerId < 30).sortBy(_.tickerId)
+  lazy private val tickersDist = tickersDictReader
+  def tickersDict = tickersDist
 
-  def getAllBarsProperties : Seq[BarCalcProperty] = sess.execute(prepBCalcProps).all().iterator.asScala
+  def getAllBarsPropertiesReader : Seq[BarCalcProperty] = sess.execute(prepBCalcProps).all().iterator.asScala
     .map(rowToBarCalcProperty).toList.filter(bp => bp.isEnabled==1)
+  lazy private val seqBarsProperties :Seq[BarCalcProperty] = getAllBarsPropertiesReader
+  def getAllBarsProperties = seqBarsProperties
 
   def getTickersBws(seqTickers :Seq[Ticker] = tickersDict,
                     seqBarProp :Seq[BarCalcProperty] = getAllBarsProperties) :Seq[TickerBws] =
@@ -35,6 +39,7 @@ object CassSessionInstance extends CassSession{
       }
     }.toSeq.sortBy(tbp => (tbp.ticker.tickerId,tbp.bws))
 
+
   private def getTickerMaxDdate(ticker :Ticker) :LocalDate =
     sess.execute(prepLastTickDdate.setInt("tickerId",ticker.tickerId)).one().getLocalDate("ddate")
 
@@ -43,10 +48,8 @@ object CassSessionInstance extends CassSession{
       .setInt("tickerId",ticker.tickerId)
       .setLocalDate("pDdate",getTickerMaxDdate(ticker))).one().getLong("db_tsunx")
 
-
-
-
-
+  def getLastBarsByTickers(seqTickersId :Seq[Int]):Seq[TickerBws] =
+    getTickersBws(tickersDict.filter(td => seqTickersId.contains(td.tickerId)))
 
 
   /**
