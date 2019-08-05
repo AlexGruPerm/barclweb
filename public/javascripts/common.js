@@ -1,34 +1,63 @@
 document.addEventListener("DOMContentLoaded", function(){
+if (document.getElementById("tickers-common") !== null) {
 var list = document.getElementById("tickers-common").getElementsByTagName('tr');
 for (var i = 0; i < list.length; i++) {
      list[i].addEventListener("click",function(){
      funcOnClick(event);
       });
   }
+ }
 });
 
 
-function funcOnClickExecBUtton() {
-  console.log("EXECUTE BUTTON")
+function funcOnClickExecButton() {
+  console.log("EXECUTE BUTTON");
   var selectedTickersTr = document.getElementById("tickers-common").getElementsByClassName('tr-ticker-selected');
   tickersSelectedArray = [];
   for (var i = 0; i < selectedTickersTr.length; i++) {
      tickersSelectedArray[i] = selectedTickersTr[i].id.split('-')[3];
    };
   if (tickersSelectedArray.length!=0){
-  console.log("Selected tickersID = "+tickersSelectedArray)
+  console.log("Selected tickersID = "+tickersSelectedArray);
 //---------------------------------------------------------------------------
     postAjax('/barsstat',{"tickersId":tickersSelectedArray}, function(data){
       console.log(data);
-      document.getElementById("right-up").innerHTML = data;
+      document.getElementById("div-bars-stats").innerHTML = data;
     });
 //---------------------------------------------------------------------------
   } else {
-  console.log("There is no selected tickers.")
+  console.log("There is no selected tickers.");
   }
 }
 
+function funcOnClickReloadButton() {
+  console.log("RELOAD BUTTON");
+  document.location.reload(true);
+}
 
+
+function funcOnClickSelAllButton() {
+  console.log("SELECT ALL BUTTON");
+  var allTickerTr = document.getElementById("tickers-common").getElementsByTagName('tr');
+    for (var i = 0; i < allTickerTr.length; i++) {
+      //exclude header TR
+      if (allTickerTr[i].classList.length != 0){
+       allTickerTr[i].className = "tr-ticker-selected";
+      }
+    };
+}
+
+
+function funcOnClickUnSelAllButton() {
+  console.log("UNSELECT ALL BUTTON");
+  var allTickerTr = document.getElementById("tickers-common").getElementsByTagName('tr');
+    for (var i = 0; i < allTickerTr.length; i++) {
+       //exclude header TR
+       if (allTickerTr[i].classList.length != 0){
+        allTickerTr[i].className = "tr-ticker";
+       }
+    };
+}
 
 
 function funcOnClick(event) {

@@ -3,34 +3,37 @@
 
 <table border="1" id="tickers-external">
     <tr>
-        <td rowspan="2" width="25%">
+        <td rowspan="2" width="25%" class="td-menu-container">
             <div>
                 <table border="1" id="tickers-common">
                     <tr>
-                        <td>ID</td>
-                        <td>CODE</td>
-                        <td>FIRST</td>
-                        <td>SECOND</td>
-                        <td>LAST DATETIME</td>
-                        <td>DIFF SECOND</td>
+                        <td class="td-ticker">ID</td>
+                        <td class="td-ticker">CODE</td>
+                        <td class="td-ticker">FIRST</td>
+                        <td class="td-ticker">SECOND</td>
+                        <td class="td-ticker">LAST DATETIME</td>
+                        <td class="td-ticker">DIFF SECOND</td>
                     </tr>
                     @for(t <- seqTicker){
                     <tr id="dict-ticker-row-@t.ticker.tickerId" class="tr-ticker">
-                        <td>@t.ticker.tickerId</td>
-                        <td>@t.ticker.tickerCode</td>
-                        <td>@t.ticker.tickerFirst</td>
-                        <td>@t.ticker.tickerSeconds</td>
-                        <td>@t.lastTickDateTime</td>
-                        <td>@t.diffSeconds</td>
+                        <td class="td-ticker">@t.ticker.tickerId</td>
+                        <td class="td-ticker">@t.ticker.tickerCode</td>
+                        <td class="td-ticker">@t.ticker.tickerFirst</td>
+                        <td class="td-ticker">@t.ticker.tickerSeconds</td>
+                        <td class="td-ticker">@t.lastTickDateTime</td>
+                        <td class="td-ticker">@t.diffSeconds</td>
                     </tr>
                     }
                 </table>
             </div>
         </td>
-        <td width="75%"><div id="right-up">RIGHT UP</div></td>
+        <td width="75%" height="50%" class="td-tbws-right">
+            <div id="div-bars-stats">RIGHT UP
+            </div>
+        </td>
     </tr>
     <tr>
-        <td>RIGHT DOWN</td>
+        <td height="50%">RIGHT DOWN</td>
     </tr>
 </table>
 

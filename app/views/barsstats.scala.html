@@ -1,23 +1,22 @@
 @(message: String, seqTickersBws :Seq[LastBar])(implicit assetsFinder: AssetsFinder)
-<div>@message</div></br>
-<div style="overflow:auto;">
+<div id="div-inter-bars-stats" class="bars-stat">
 <table border="1"  id="tickers-bws-common">
     <tr>
-        <td>CODE</td>
-        <td>BWS(sec.)</td>
-        <td>LASTBAR(datetime)</td>
-        <td>LASTTICK(datetime)</td>
-        <td>DIFF TO CURRTS(sec.)</td>
-        <td>DIFF TO LASTTICK(sec.)</td>
+        <td class="tbws">CODE</td>
+        <td class="tbws">BWS(sec.)</td>
+        <td class="tbws">LASTBAR(datetime)</td>
+        <td class="tbws">LASTTICK(datetime)</td>
+        <td class="tbws">DIFF TO CURRTS(sec.)</td>
+        <td class="tbws">DIFF TO LASTTICK(sec.)</td>
     </tr>
     @for(t <- seqTickersBws){
     <tr id="tickerbws-@t.tickerWithDts.ticker.tickerId-@t.bws" class="tr-tickerbws">
-        <td>@t.tickerWithDts.ticker.tickerCode</td>
-        <td>@t.bws</td>
-        <td>@t.lastBarDateTime</td>
-        <td>@t.tickerWithDts.lastTickDateTime</td>
-        <td>@t.diffSecondsToCurr</td>
-        <td>@t.diffSecondsToLastTick</td>
+        <td class="tbws">@t.tickerWithDts.ticker.tickerCode</td>
+        <td class="tbws">@t.bws</td>
+        <td class="tbws">@t.lastBarDateTime</td>
+        <td class="tbws">@t.tickerWithDts.lastTickDateTime</td>
+        <td class="tbws">@t.diffSecondsToCurr</td>
+        <td class="tbws">@t.diffSecondsToLastTick</td>
     </tr>
     }
 </table>

@@ -8,21 +8,24 @@
 </head>
 <body>
 
-<table border="1" width=100% id="teable-main">
+<table border="1" width=100% id="table-main">
     <tr>
-        <td width=20%>menu</td>
+        <td width=10%>menu</td>
         <td>Current DateTime = @currdt
-         <input type="button" id="exec" onclick="funcOnClickExecBUtton()" value="EXECUTE">
+         <input type="button" id="reload" onclick="funcOnClickReloadButton()" value="RELOAD">
+         <input type="button" id="exec" onclick="funcOnClickExecButton()" value="EXECUTE">
+         <input type="button" id="selalltickers" onclick="funcOnClickSelAllButton()" value="SEL ALL">
+         <input type="button" id="unselalltickers" onclick="funcOnClickUnSelAllButton()" value="UNSEL ALL">
         </td>
     </tr>
     <tr>
-        <td>
+        <td class="td-menu">
             @menu(activeMenuId)
         </td>
         <td>
-            <section class="wscontent">
-                @wsContent
-            </section>
+            <div id="div-wscontent" class="wscontent">
+              @wsContent
+            </div>
         </td>
     </tr>
     <tr>
