@@ -44,12 +44,11 @@ class MenuId1 @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsF
     val futs: Seq[Future[TickerWithDdateTs]] = tickersFrx
       .map(t => Future(TickerWithDdateTs(t, sess.getTickerLastTs(t), currTimestamp)))
     val seqTickersDdateTs :Seq[TickerWithDdateTs] = Await.result(Future.sequence(futs), Duration.Inf)
-      .sortBy(elm => elm.diffSeconds)(Ordering[Long])
+      .sortBy(elm => elm.ticker.tickerId)
+      //.sortBy(elm => elm.diffSeconds)(Ordering[Long])
 
     val durrS :Double = (System.currentTimeMillis-t1).toDouble/1000.toDouble
     log.info(s"Duration $durrS s. seqTickersDdateTs size=${seqTickersDdateTs.size}")
-
-    //todo: we can use here tiny Futures for parallel getting max ddate,ts (s)
     Ok(views.html.mid1("mid1",1,seqTickersDdateTs,currentDateTime))
   }
 

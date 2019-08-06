@@ -10,7 +10,7 @@
         <td class="tbws">DIFF TO LASTTICK(sec.)</td>
     </tr>
     @for(t <- seqTickersBws){
-    <tr id="tickerbws-@t.tickerWithDts.ticker.tickerId-@t.bws" class="tr-tickerbws">
+    <tr id="tickerbws-@t.tickerWithDts.ticker.tickerId-@t.bws" class="@{ if (t.isFail==1) {"tr-tickerbws-fail"} else {"tr-tickerbws"}}">
         <td class="tbws">@t.tickerWithDts.ticker.tickerCode</td>
         <td class="tbws">@t.bws</td>
         <td class="tbws">@t.lastBarDateTime</td>

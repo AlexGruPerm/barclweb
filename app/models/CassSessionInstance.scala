@@ -88,27 +88,13 @@ object CassSessionInstance extends CassSession{
 
     val seqLastBarsFuts :Seq[Future[Seq[LastBar]]] = seqTickerBws
       .flatMap(tbws => seqTickersDdateTs
-        .withFilter(twd => twd.ticker.tickerId == tbws.ticker.tickerId) //todo: ticker == ticker
+        .withFilter(twd => twd.ticker.tickerId == tbws.ticker.tickerId)
         .flatMap(twdf => Seq(Future(getBars(tbws,twdf,currTimestamp))))
       )
 
     val seqLastBars :Seq[LastBar] = Await.result(Future.sequence(seqLastBarsFuts), Duration.Inf).flatten
-
-    /*
-    val seqLastBars :Seq[LastBar] = seqTickerBws
-      .flatMap(tbws => seqTickersDdateTs
-        .withFilter(twd => twd.ticker.tickerId == tbws.ticker.tickerId) //todo: ticker == ticker
-        .flatMap(twdf => getBars(tbws,twdf,currTimestamp))
-    )
-
-    val seqLastBars :Seq[LastBar] = Await.result(Future.sequence(seqLastBarsFuts), Duration.Inf)
-    */
-
     seqLastBars
   }
-
-
-
 
 
 

@@ -9,19 +9,27 @@
                     <tr>
                         <td class="td-ticker">ID</td>
                         <td class="td-ticker">CODE</td>
+                        @***
                         <td class="td-ticker">FIRST</td>
                         <td class="td-ticker">SECOND</td>
-                        <td class="td-ticker">LAST DATETIME</td>
-                        <td class="td-ticker">DIFF SECOND</td>
+                        ***@
+                        <td class="td-ticker">LAST D.T.</td>
+                        <td class="td-ticker">DIFF SEC.</td>
+                        <td class="td-ticker">FAIL BWS CNT.</td>
                     </tr>
                     @for(t <- seqTicker){
                     <tr id="dict-ticker-row-@t.ticker.tickerId" class="tr-ticker">
                         <td class="td-ticker">@t.ticker.tickerId</td>
                         <td class="td-ticker">@t.ticker.tickerCode</td>
+                        @***
                         <td class="td-ticker">@t.ticker.tickerFirst</td>
                         <td class="td-ticker">@t.ticker.tickerSeconds</td>
+                        ***@
                         <td class="td-ticker">@t.lastTickDateTime</td>
                         <td class="td-ticker">@t.diffSeconds</td>
+                        <td id="td-ticker-fail-bws-@t.ticker.tickerId" class="td-ticker">
+                            <img id="wimg-ticker-@t.ticker.tickerId" align="middle" src="@routes.Assets.at("images/intro.gif")">
+                        </td>
                     </tr>
                     }
                 </table>

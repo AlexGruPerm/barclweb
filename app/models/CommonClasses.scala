@@ -38,5 +38,8 @@ case class LastBar(
   val lastBarDateTime = getDateAsString(convertLongToDate(tsEnd))
   val diffSecondsToCurr = currTimestamp/1000L - tsEnd/1000L
   val diffSecondsToLastTick = tickerWithDts.dbTsunx/1000L - tsEnd/1000L
+  val isFail :Int = if (diffSecondsToLastTick > bws) 1 else 0
+  def getTickerId :Int = tickerWithDts.ticker.tickerId
 }
 
+case class TickerFailBwsCnt(tickerId  :Int,failCnt :Int)

@@ -1,13 +1,107 @@
+
+/**/
 document.addEventListener("DOMContentLoaded", function(){
+
 if (document.getElementById("tickers-common") !== null) {
 var list = document.getElementById("tickers-common").getElementsByTagName('tr');
 for (var i = 0; i < list.length; i++) {
      list[i].addEventListener("click",function(){
-     funcOnClick(event);
-      });
-  }
- }
+      funcOnClick(event);
+     });
+     /* in case of each tr tickerCalcFailBws(list[i]); */
+  }};
+
+//once for all tickers for whole page
+if (document.getElementById("tickers-common") !== null) {
+ tickerCalcFailBwsA();
+}
+
 });
+
+function funcOnClick(event) {
+      var tickerId  = event.currentTarget.id.split('-')[3];
+      console.log("funcOnClick tickerId="+tickerId);
+      tickerCalcFailBws(tickerId);
+
+      if (event.currentTarget.className=="tr-ticker-selected"){
+       event.currentTarget.className = "tr-ticker";
+      } else {
+       event.currentTarget.className = "tr-ticker-selected";
+      }
+}
+
+
+
+function tickerCalcFailBwsA() {
+     ajax_get('/bwsfailcnta', function(data) {
+       /*
+       console.log("data.bwsfailcnta="+ data);
+       console.log("data.tickersFails="+ data.tickersFails);
+       */
+       var arrayData = data.tickersFails
+
+       var listTickers = document.getElementById("tickers-common").getElementsByTagName('tr');
+       //start from 1 to eliminate header TR
+       for (var i = 1; i < listTickers.length; i++) {
+       /*console.log("trid = "+listTickers[i].id)*/
+        var tickerid = listTickers[i].id.split('-')[3]
+        /*console.log("loop by listTickers, tickerid="+tickerid)*/
+
+        var tdFail = document.getElementById("td-ticker-fail-bws-"+tickerid)
+        var thisTickerImg = document.getElementById("wimg-ticker-"+tickerid)
+           if (thisTickerImg!=null){
+            //thisTickerImg.remove()
+             thisTickerImg.style.visibility = (thisTickerImg.style.visibility ? 'visible' : 'hidden');
+           }
+
+        for (var j = 0; j < arrayData.length; j++) {
+          /*console.log("   loop by arrayData iteration tickerID="+arrayData[j].tickerID+" ")*/
+          if (arrayData[j].tickerID == tickerid){
+            if (arrayData[j].failcnt != "0") {
+               tdFail.innerHTML = arrayData[j].failcnt
+               tdFail.className = "td-ticker-fail"
+            }
+          }
+        }
+        if (tdFail.className != "td-ticker-fail") {
+         tdFail.innerHTML = "<div>0</div>";
+        }
+       }
+     }
+  );
+}
+
+
+function tickerCalcFailBws(tickerid) {
+ /*console.log("tickerCalcFailBws")*/
+        var thisTickerImg = document.getElementById("wimg-ticker-"+tickerid)
+        if (thisTickerImg!=null){
+         //thisTickerImg.remove()
+         thisTickerImg.style.visibility = (thisTickerImg.style.visibility ? 'visible' : 'hidden');
+        }
+ //---------------------------------------------------------------------------
+     /*console.log("begin ajax_get bwsfailcnt for "+tickerid)*/
+     ajax_get('/bwsfailcnt/'+tickerid, function(data) {
+       /*console.log("data.failcnt="+ data.failcnt);*/
+       //hide  id="wimg-ticker-@t.ticker.tickerId">
+       var thisTickerImg = document.getElementById("wimg-ticker-"+tickerid)
+       if (thisTickerImg!=null){
+        //thisTickerImg.remove()
+        thisTickerImg.style.visibility = (thisTickerImg.style.visibility ? 'hidden' : 'visible');
+       }
+       var tdFail = document.getElementById("td-ticker-fail-bws-"+tickerid)
+       tdFail.innerHTML = data.failcnt
+       if (data.failcnt != "0") {
+       tdFail.className = "td-ticker-fail"
+       }
+     }
+  );
+ //---------------------------------------------------------------------------
+         if (thisTickerImg!=null){
+          //thisTickerImg.remove()
+          thisTickerImg.style.visibility = (thisTickerImg.style.visibility ? 'visible' : 'hidden');
+         }
+}
 
 
 function funcOnClickExecButton() {
@@ -21,7 +115,7 @@ function funcOnClickExecButton() {
   console.log("Selected tickersID = "+tickersSelectedArray);
 //---------------------------------------------------------------------------
     postAjax('/barsstat',{"tickersId":tickersSelectedArray}, function(data){
-      console.log(data);
+      //console.log(data);
       document.getElementById("div-bars-stats").innerHTML = data;
     });
 //---------------------------------------------------------------------------
@@ -60,30 +154,7 @@ function funcOnClickUnSelAllButton() {
 }
 
 
-function funcOnClick(event) {
-      var tickerId  = event.currentTarget.id.split('-')[3];
-      console.log("tickerId="+tickerId);
 
-      if (event.currentTarget.className=="tr-ticker-selected"){
-       event.currentTarget.className = "tr-ticker";
-      } else {
-       event.currentTarget.className = "tr-ticker-selected";
-      }
-
-      //change class ticker-selected,
-
-//---------------------------------------------------------------
-       /*ajax_get('/getbars/'+tickerId+'/'+widthSec+'/'+bPattCnt+'/'+bMaxTsEnd, function(data) {
-         console.log("JSON data.rows="+ data["data"].length);
-         document.getElementById("div-test").innerHTML = data;
-         for (var i=0; i < data["data"].length; i++) {
-           console.log("i=["+i+"]  ts_end="+data["data"][i][0]+"  DateTime="+ timeConverter(data["data"][i][0]) +" c="+data["data"][i][1]);
-         }
-         paintJQBarsGraph(data,widthSec);
-        });
-       */
-//---------------------------------------------------------------
-}
 
 
 function ajax_get(url, callback) {
@@ -114,17 +185,6 @@ function postAjax(url, data, success) {
     };
     var params = JSON.stringify(data);
     xhr.send(params);
-    return xhr;
-}
-
-function getAjax(url, success) {
-    var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-    xhr.open('GET', url);
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState>3 && xhr.status==200) success(xhr.responseText);
-    };
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    xhr.send();
     return xhr;
 }
 
