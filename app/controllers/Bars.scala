@@ -53,6 +53,7 @@ class Bars @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsFind
    * For single ticker
    */
   def  bwsfailcnt(tickerid: Int)= Action {
+    //Thread.sleep(3000)
     log.info("bwsfailcnt tickerId="+tickerid)
     //Thread.sleep(Random.nextInt(5000))
     val t1 = System.currentTimeMillis
@@ -68,6 +69,7 @@ class Bars @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsFind
    * But also GEt and don't receive parameters. Take it from
   */
   def  bwsfailcnta= Action {
+    //Thread.sleep(3000)
     val t1 = System.currentTimeMillis
     //get it by all tickers.
     val seqLastBars :Seq[LastBar] = sess.getLastBarsByTickers(sess.tickersDict.map(td => td.tickerId))

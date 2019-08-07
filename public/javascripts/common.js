@@ -1,4 +1,7 @@
 
+//global variables
+var isSingleTicker=0;
+
 /**/
 document.addEventListener("DOMContentLoaded", function(){
 
@@ -16,22 +19,71 @@ if (document.getElementById("tickers-common") !== null) {
  tickerCalcFailBwsA();
 }
 
+//add event listener for checkbos issingles
+if (document.getElementById("issingles") !== null) {
+const chboxIsSingle = document.getElementById("issingles")
+  chboxIsSingle.addEventListener("change", (event) => {
+
+   if (event.target.checked) {
+    isSingleTicker = 1
+    console.log("checked isSingleTicker="+isSingleTicker)
+    document.getElementById("exec").style.visibility = 'hidden';
+    document.getElementById("selalltickers").style.visibility = 'hidden';
+    document.getElementById("unselalltickers").style.visibility = 'hidden';
+
+    //unselect all tickers
+    funcOnClickUnSelAllButton();
+   } else {
+    isSingleTicker = 0
+    console.log("not checked isSingleTicker="+isSingleTicker)
+    document.getElementById("exec").style.visibility = 'visible';
+    document.getElementById("selalltickers").style.visibility = 'visible';
+    document.getElementById("unselalltickers").style.visibility = 'visible';
+   }
+
+  });
+}
+
 });
 
 function funcOnClick(event) {
       var tickerId  = event.currentTarget.id.split('-')[3];
-      console.log("funcOnClick tickerId="+tickerId);
+      //console.log("funcOnClick tickerId="+tickerId);
       tickerCalcFailBws(tickerId);
-
-      if (event.currentTarget.className=="tr-ticker-selected"){
-       event.currentTarget.className = "tr-ticker";
-      } else {
-       event.currentTarget.className = "tr-ticker-selected";
+      if (isSingleTicker == 1) {
+       funcOnClickUnSelAllButton();
+      }
+      event.currentTarget.className = (event.currentTarget.className == "tr-ticker-selected") ? "tr-ticker" : "tr-ticker-selected"
+      if (isSingleTicker == 1) {
+        funcOnClickExecButton();
       }
 }
 
+/*
+ This function calls when we click on tr with tickers.
+*/
+function tickerCalcFailBws(tickerid) {
+    //console.log("tickerCalcFailBws for ticker="+tickerid)
+     var thisTickerImg = document.getElementById("wimg-ticker-"+tickerid)
+     if (thisTickerImg!=null){
+       thisTickerImg.style.visibility = 'visible';
+     }
+     var tdFail  = document.getElementById("td-ticker-fail-bws-"+tickerid)
+     var divFail = document.getElementById("span-ticker-fail-bws-"+tickerid)
+     //console.log("begin ajax_get bwsfailcnt for "+tickerid)
+     ajax_get('/bwsfailcnt/'+tickerid, function(data) {
+       //console.log("data.failcnt="+ data.failcnt);
+       divFail.innerHTML = data.failcnt
+       tdFail.className = (data.failcnt != "0") ? "td-ticker-fail" : "td-ticker"
+       if (thisTickerImg!=null){
+        thisTickerImg.style.visibility = 'hidden';
+       }
+      });
+}
 
-
+/*
+ This function calls once, after page reloaded.
+*/
 function tickerCalcFailBwsA() {
      ajax_get('/bwsfailcnta', function(data) {
        /*
@@ -48,59 +100,26 @@ function tickerCalcFailBwsA() {
         /*console.log("loop by listTickers, tickerid="+tickerid)*/
 
         var tdFail = document.getElementById("td-ticker-fail-bws-"+tickerid)
+        var divFail = document.getElementById("span-ticker-fail-bws-"+tickerid)
         var thisTickerImg = document.getElementById("wimg-ticker-"+tickerid)
            if (thisTickerImg!=null){
-            //thisTickerImg.remove()
              thisTickerImg.style.visibility = (thisTickerImg.style.visibility ? 'visible' : 'hidden');
            }
 
         for (var j = 0; j < arrayData.length; j++) {
-          /*console.log("   loop by arrayData iteration tickerID="+arrayData[j].tickerID+" ")*/
           if (arrayData[j].tickerID == tickerid){
             if (arrayData[j].failcnt != "0") {
-               tdFail.innerHTML = arrayData[j].failcnt
+               divFail.innerHTML = arrayData[j].failcnt
                tdFail.className = "td-ticker-fail"
             }
           }
         }
         if (tdFail.className != "td-ticker-fail") {
-         tdFail.innerHTML = "<div>0</div>";
+         divFail.innerHTML = "0";
         }
        }
      }
   );
-}
-
-
-function tickerCalcFailBws(tickerid) {
- /*console.log("tickerCalcFailBws")*/
-        var thisTickerImg = document.getElementById("wimg-ticker-"+tickerid)
-        if (thisTickerImg!=null){
-         //thisTickerImg.remove()
-         thisTickerImg.style.visibility = (thisTickerImg.style.visibility ? 'visible' : 'hidden');
-        }
- //---------------------------------------------------------------------------
-     /*console.log("begin ajax_get bwsfailcnt for "+tickerid)*/
-     ajax_get('/bwsfailcnt/'+tickerid, function(data) {
-       /*console.log("data.failcnt="+ data.failcnt);*/
-       //hide  id="wimg-ticker-@t.ticker.tickerId">
-       var thisTickerImg = document.getElementById("wimg-ticker-"+tickerid)
-       if (thisTickerImg!=null){
-        //thisTickerImg.remove()
-        thisTickerImg.style.visibility = (thisTickerImg.style.visibility ? 'hidden' : 'visible');
-       }
-       var tdFail = document.getElementById("td-ticker-fail-bws-"+tickerid)
-       tdFail.innerHTML = data.failcnt
-       if (data.failcnt != "0") {
-       tdFail.className = "td-ticker-fail"
-       }
-     }
-  );
- //---------------------------------------------------------------------------
-         if (thisTickerImg!=null){
-          //thisTickerImg.remove()
-          thisTickerImg.style.visibility = (thisTickerImg.style.visibility ? 'visible' : 'hidden');
-         }
 }
 
 
@@ -132,6 +151,7 @@ function funcOnClickReloadButton() {
 
 function funcOnClickSelAllButton() {
   console.log("SELECT ALL BUTTON");
+  if (isSingleTicker==0){
   var allTickerTr = document.getElementById("tickers-common").getElementsByTagName('tr');
     for (var i = 0; i < allTickerTr.length; i++) {
       //exclude header TR
@@ -139,6 +159,7 @@ function funcOnClickSelAllButton() {
        allTickerTr[i].className = "tr-ticker-selected";
       }
     };
+   }
 }
 
 

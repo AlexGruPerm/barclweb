@@ -28,7 +28,8 @@
                         <td class="td-ticker">@t.lastTickDateTime</td>
                         <td class="td-ticker">@t.diffSeconds</td>
                         <td id="td-ticker-fail-bws-@t.ticker.tickerId" class="td-ticker">
-                            <img id="wimg-ticker-@t.ticker.tickerId" align="middle" src="@routes.Assets.at("images/intro.gif")">
+                            <img id="wimg-ticker-@t.ticker.tickerId" align="middle" border="0" hspace="0" vspace="0" src="@routes.Assets.at("images/intro.gif")"/>
+                            <span id="span-ticker-fail-bws-@t.ticker.tickerId"></span>
                         </td>
                     </tr>
                     }

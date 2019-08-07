@@ -74,11 +74,13 @@ tr.tr-ticker {
 
 td.td-ticker{
              padding-left: 3px;
+             vertical-align: middle;
             }
 
 td.td-ticker-fail{
              background-color: #FADBD8; /* soft pink */
              padding-left: 3px;
+             vertical-align: middle;
             }
 
 tr.tr-ticker-selected {
