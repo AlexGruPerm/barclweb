@@ -2,6 +2,27 @@
 //global variables
 var isSingleTicker=0;
 
+
+document.addEventListener("keydown", function(event) {
+  //event.preventDefault();
+  const key = event.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
+  switch (key) { // change to event.key to key to use the above variable
+    case "ArrowLeft":
+      console.log("ArrowLeft");
+      break;
+    case "ArrowRight":
+      console.log("ArrowRight");
+      break;
+    case "ArrowUp":
+      console.log("ArrowUp");
+      break;
+    case "ArrowDown":
+      console.log("ArrowDown");
+      break;
+  }
+});
+
+
 /**/
 document.addEventListener("DOMContentLoaded", function(){
 
