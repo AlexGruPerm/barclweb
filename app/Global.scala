@@ -1,6 +1,6 @@
 package app
 
-import models.{CassConnectException, CassSessionInstance}
+import models.{CassConnectException, CassSessionInstance, RequestLogger}
 import org.slf4j.LoggerFactory
 
 object Global {
@@ -29,4 +29,5 @@ object Global {
     }
   require(!sessInstance.sess.isClosed, "Cassandra session must be opened.")
 
+  val reqLog :RequestLogger.type = RequestLogger
 }

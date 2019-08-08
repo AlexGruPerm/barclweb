@@ -10,9 +10,9 @@ class MenuId3 @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsF
   val log: Logger = Logger(this.getClass())
   log.info("Constructor "+this.getClass.getName)
 
-  def midAction = Action {
+  def midAction = Action {implicit request =>
     log.info(this.getClass.getName+" mid3")
-    Ok(views.html.mid3("mid3",3))
+    Ok(views.html.mid3("mid3",3)).withSession(request.session + ("mid" -> "3"))
   }
 
 }

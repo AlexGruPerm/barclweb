@@ -16,7 +16,7 @@ class MenuId1 @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsF
   val log: Logger = Logger(this.getClass())
   log.info("Constructor "+this.getClass.getName)
 
-  def midAction = Action {
+  def midAction = Action {implicit request =>
     log.info(this.getClass.getName+" mid1")
 
     val sess  = Global.sessInstance
@@ -49,7 +49,7 @@ class MenuId1 @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsF
 
     val durrS :Double = (System.currentTimeMillis-t1).toDouble/1000.toDouble
     log.info(s"Duration $durrS s. seqTickersDdateTs size=${seqTickersDdateTs.size}")
-    Ok(views.html.mid1("mid1",1,seqTickersDdateTs,currentDateTime))
+    Ok(views.html.mid1("mid1",1,seqTickersDdateTs,currentDateTime)).withSession(request.session + ("mid" -> "1"))
   }
 
 }
