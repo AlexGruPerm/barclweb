@@ -1,23 +1,42 @@
-
 //global variables
 var isSingleTicker=0;
 
-
 document.addEventListener("keydown", function(event) {
-  //event.preventDefault();
-  const key = event.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
+  const key = event.key;
+   let addPrev = -1
+   let addNext = 1
+  var allTickersTrSelected = document.getElementById("tickers-common").getElementsByClassName('tr-ticker-selected').length;
   switch (key) { // change to event.key to key to use the above variable
-    case "ArrowLeft":
-      console.log("ArrowLeft");
-      break;
-    case "ArrowRight":
-      console.log("ArrowRight");
-      break;
     case "ArrowUp":
-      console.log("ArrowUp");
+      //console.log("ArrowUp");
+      if (isSingleTicker==1 && allTickersTrSelected==1) {
+       var thisSelectedTicker = document.getElementById("tickers-common").getElementsByClassName('tr-ticker-selected')[0]
+       let tickerId = thisSelectedTicker.id.split('-')[3];
+       let prevTickerId = +tickerId + +addPrev
+       var prevTr = document.getElementById("dict-ticker-row-"+prevTickerId)
+       if (prevTr != null) {
+        prevTr.className = 'tr-ticker-selected'
+        thisSelectedTicker.className = 'tr-ticker'
+        console.log("prev ticker is id = "+prevTr.id+" class = "+prevTr.className);
+        funcOnClick(prevTr);
+       }
+
+      }
       break;
     case "ArrowDown":
-      console.log("ArrowDown");
+      //console.log("ArrowDown");
+      if (isSingleTicker==1 && allTickersTrSelected==1) {
+       var thisSelectedTicker = document.getElementById("tickers-common").getElementsByClassName('tr-ticker-selected')[0]
+       let tickerId = thisSelectedTicker.id.split('-')[3];
+       let nextDownTickerId = +tickerId + +addNext
+       var nextDownTr = document.getElementById("dict-ticker-row-"+nextDownTickerId)
+       if (nextDownTr != null) {
+        nextDownTr.className = 'tr-ticker-selected'
+        thisSelectedTicker.className = 'tr-ticker'
+        console.log("next ticker down is id = "+nextDownTr.id+" class = "+nextDownTr.className);
+        funcOnClick(nextDownTr);
+       }
+      }
       break;
   }
 });
@@ -51,9 +70,15 @@ const chboxIsSingle = document.getElementById("issingles")
     document.getElementById("exec").style.visibility = 'hidden';
     document.getElementById("selalltickers").style.visibility = 'hidden';
     document.getElementById("unselalltickers").style.visibility = 'hidden';
-
     //unselect all tickers
-    funcOnClickUnSelAllButton();
+
+    var allTickersTrSelected = document.getElementById("tickers-common").getElementsByClassName('tr-ticker-selected').length;
+    if (allTickersTrSelected==1){
+     funcOnClickExecButton();
+    } else {
+     funcOnClickUnSelAllButton();
+    }
+
    } else {
     isSingleTicker = 0
     console.log("not checked isSingleTicker="+isSingleTicker)
@@ -68,15 +93,17 @@ const chboxIsSingle = document.getElementById("issingles")
 });
 
 function funcOnClick(event) {
-      var tickerId  = event.currentTarget.id.split('-')[3];
-      //console.log("funcOnClick tickerId="+tickerId);
+      var obj =  (event.currentTarget == null) ? event  : event.currentTarget;
+      var tickerId  = obj.id.split('-')[3];
+      console.log("funcOnClick tickerId = "+tickerId+" isSingleTicker = "+isSingleTicker);
       tickerCalcFailBws(tickerId);
       if (isSingleTicker == 1) {
        funcOnClickUnSelAllButton();
-      }
-      event.currentTarget.className = (event.currentTarget.className == "tr-ticker-selected") ? "tr-ticker" : "tr-ticker-selected"
-      if (isSingleTicker == 1) {
-        funcOnClickExecButton();
+       console.log("select this ticker")
+       obj.className = "tr-ticker-selected"
+       funcOnClickExecButton();
+      } else {
+       event.currentTarget.className = (event.currentTarget.className == "tr-ticker-selected") ? "tr-ticker" : "tr-ticker-selected"
       }
 }
 
@@ -183,16 +210,22 @@ function funcOnClickSelAllButton() {
    }
 }
 
-
+/*
+ Unselect all tickers if selected tickers count more then 1.
+*/
 function funcOnClickUnSelAllButton() {
   console.log("UNSELECT ALL BUTTON");
   var allTickerTr = document.getElementById("tickers-common").getElementsByTagName('tr');
+  var allTickersTrSelected = document.getElementById("tickers-common").getElementsByClassName('tr-ticker-selected').length;
+  console.log("funcOnClickUnSelAllButton allTickersTrSelected = "+allTickersTrSelected);
+  //if (allTickersTrSelected > 1) {
     for (var i = 0; i < allTickerTr.length; i++) {
        //exclude header TR
        if (allTickerTr[i].classList.length != 0){
         allTickerTr[i].className = "tr-ticker";
        }
     };
+   //}
 }
 
 
