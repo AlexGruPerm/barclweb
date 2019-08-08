@@ -6,6 +6,7 @@ import models.{CommonFuncs, LastBar, TickerFailBwsCnt}
 import play.api.Logger
 import play.api.http.MimeTypes
 import play.api.libs.json._
+import play.api.libs.typedmap.TypedMap
 import play.api.mvc._
 
 
@@ -16,6 +17,7 @@ class Bars @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsFind
   val log: Logger = Logger(this.getClass())
   log.info("Constructor "+this.getClass.getName)
   val sess  = Global.sessInstance
+
 
   def barsstat = Action(parse.json) {
     request => {
@@ -43,6 +45,11 @@ class Bars @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsFind
     }
   }
 
+  /*todo: delit
+      val newAttrs :TypedMap = Global.reqLog.saveLog(request)
+      request.withAttrs(newAttrs)
+  */
+
 
   /**
    * Take one GET parameter tickerID
@@ -52,7 +59,9 @@ class Bars @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsFind
    *
    * For single ticker
    */
-  def  bwsfailcnt(tickerid: Int)= Action {
+  def  bwsfailcnt(tickerid: Int)= Action {implicit request =>
+    val newAttrs :TypedMap = Global.reqLog.saveLog(request)
+    request.withAttrs(newAttrs)
     //Thread.sleep(3000)
     log.info("bwsfailcnt tickerId="+tickerid)
     //Thread.sleep(Random.nextInt(5000))
@@ -68,7 +77,9 @@ class Bars @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsFind
   /** like bwsfailcnt search above.
    * But also GEt and don't receive parameters. Take it from
   */
-  def  bwsfailcnta= Action {
+  def  bwsfailcnta= Action {implicit request =>
+    val newAttrs :TypedMap = Global.reqLog.saveLog(request)
+    request.withAttrs(newAttrs)
     //Thread.sleep(3000)
     val t1 = System.currentTimeMillis
     //get it by all tickers.

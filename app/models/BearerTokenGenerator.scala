@@ -1,9 +1,11 @@
+package models
 
 import scala.util._
 import java.security.SecureRandom
 import java.security.MessageDigest
 
 /*
+ * From https://gist.github.com/jeffsteinmetz/063bd3237033f3af2ed9
  * Generates a Bearer Token with a length of
  * 32 characters (MD5) or 64 characters (SHA-256) according to the
  * specification RFC6750 (http://tools.ietf.org/html/rfc6750)
@@ -73,59 +75,3 @@ class BearerTokenGenerator {
     sha(tokenprefix + System.nanoTime() + generateToken(TOKEN_LENGTH))
   }
 }
-
-
-val tokenGenerator = new BearerTokenGenerator
-val username = "mary.smith"
-val token = tokenGenerator.generateMD5Token(username)
-println(token)
-
-
-/*
-case class Ticker(tickerId :Int)
-
-case class TickerWithDdateTs(ticker :Ticker, dbTsunx :Long, currTimestamp :Long )
-
-case class LastBar(
-                    tickerWithDts: TickerWithDdateTs,
-                    isFail :Int
-                  ){
-  def getTickerId :Int = tickerWithDts.ticker.tickerId
-}
-
-case class TickerFailBwsCnt(tickerId  :Int,failCnt :Int)
-
-val seqLastBars :Seq[LastBar] = Seq(
-  LastBar(TickerWithDdateTs(Ticker(1),100L,100L),1),
-  LastBar(TickerWithDdateTs(Ticker(1),100L,100L),0),
-  LastBar(TickerWithDdateTs(Ticker(1),100L,100L),1),
-
-  LastBar(TickerWithDdateTs(Ticker(2),100L,100L),0),
-  LastBar(TickerWithDdateTs(Ticker(2),100L,100L),1),
-  LastBar(TickerWithDdateTs(Ticker(2),100L,100L),0),
-
-  LastBar(TickerWithDdateTs(Ticker(3),100L,100L),1),
-  LastBar(TickerWithDdateTs(Ticker(3),100L,100L),0)
-)
-
-val res : Seq[TickerFailBwsCnt] =
-  seqLastBars.map(_.getTickerId).distinct.map{
-    thisTickerId => TickerFailBwsCnt(thisTickerId,seqLastBars
-      .count(c => c.getTickerId==thisTickerId && c.isFail==1))
-  }
-*/
-
-
-//
-
-
-/*
-val res : Seq[TickerFailBwsCnt] =
-  seqLastBars
-    .map(lb => (lb.tickerWithDts.ticker.tickerId,lb.isFail))
-    .groupBy(t => t._1)
-    .collect { case grp => {
-      val (groupId: Int, tf: List[(Int, Int)]) = grp
-      TickerFailBwsCnt(tf.head._1, tf.count(t => t._2 == 1))}
-    }.toSeq
-*/

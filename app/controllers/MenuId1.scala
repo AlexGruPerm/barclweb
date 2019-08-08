@@ -4,6 +4,7 @@ import app.Global
 import javax.inject._
 import models.{CommonFuncs, Ticker, TickerWithDdateTs}
 import play.api.Logger
+import play.api.libs.typedmap.TypedMap
 import play.api.mvc._
 
 import scala.concurrent.{Await, Future}
@@ -18,6 +19,9 @@ class MenuId1 @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsF
 
   def midAction = Action {implicit request =>
     log.info(this.getClass.getName+" mid1")
+
+    val newAttrs :TypedMap = Global.reqLog.saveLog(request)
+    request.withAttrs(newAttrs)
 
     val sess  = Global.sessInstance
     val tickersFrx :Seq[Ticker] = sess.tickersDict

@@ -13,21 +13,18 @@ class HomeController @Inject()(cc: ControllerComponents) (implicit assetsFinder:
   val log: Logger = Logger(this.getClass())
   log.info("Constructor "+this.getClass.getName)
 
-
   def index = Action { implicit request =>
     log.info(this.getClass.getName+" index")
-    val uid :String = Global.reqLog.saveLog(request)
+    //val uid :String = Global.reqLog.saveLog(request)
+    val newAttrs :TypedMap = Global.reqLog.saveLog(request)
+    //request.withAttrs(newAttrs)
 
-    log.info(" HomeController uid = "+uid)
+    log.info(" Try get UID after set uid = "+request.session.get("uid"))
 
-    val newAttrs :TypedMap = request.attrs
-    newAttrs.+(TypedKey.apply[String]("uid")->uid)
-    request.withAttrs(newAttrs)
 
     val lastMenuId :Int = request.session.get("mid")
       .map(id => id.toIntOption match {
         case Some(id) => id
-        case None => 0
       }).getOrElse(0)
 
     //redirect to last visited menu ID.

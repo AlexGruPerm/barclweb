@@ -97,15 +97,22 @@ function funcOnClick(event) {
       var tickerId  = obj.id.split('-')[3];
       console.log("funcOnClick tickerId = "+tickerId+" isSingleTicker = "+isSingleTicker);
       tickerCalcFailBws(tickerId);
-      if (isSingleTicker == 1) {
-       funcOnClickUnSelAllButton();
-       console.log("select this ticker")
-       obj.className = "tr-ticker-selected"
-       funcOnClickExecButton();
-      } else {
-       event.currentTarget.className = (event.currentTarget.className == "tr-ticker-selected") ? "tr-ticker" : "tr-ticker-selected"
-      }
+            if (isSingleTicker == 1) {
+                console.log("Next ...");
+                funcOnClickUnSelAllButton();
+                console.log("select this ticker")
+                obj.className = "tr-ticker-selected"
+                funcOnClickExecButton();
+            } else {
+                event.currentTarget.className = (event.currentTarget.className == "tr-ticker-selected") ? "tr-ticker" : "tr-ticker-selected"
+                var allTickersTrSelected = document.getElementById("tickers-common").getElementsByClassName('tr-ticker-selected').length;
+                if (allTickersTrSelected==1){
+                console.log("Multiselect and one selected.");
+                funcOnClickExecButton();
+                }
+            }
 }
+
 
 /*
  This function calls when we click on tr with tickers.
