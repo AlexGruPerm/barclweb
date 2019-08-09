@@ -1,0 +1,47 @@
+CREATE KEYSPACE mts_web
+WITH durable_writes = true
+AND replication = {
+	'class' : 'SimpleStrategy',
+	'replication_factor' : 1
+};
+
+CREATE TABLE mts_web.comm (
+	ddate date,
+	ts    bigint,
+	uid   text,
+    uip   text,
+    rpath text,
+    cntrl text,
+    mth   text,
+	PRIMARY KEY (ddate , ts)
+) WITH CLUSTERING ORDER BY (ts DESC);
+
+CREATE TABLE mts_web.ddate_stat(
+	ddate date,
+	cnt counter,
+	PRIMARY KEY (ddate)
+);
+
+CREATE TABLE mts_web.uid_stat(
+	uid   text,
+	ddate date,
+	cnt counter,
+	PRIMARY KEY (uid, ddate)
+) WITH CLUSTERING ORDER BY ( ddate DESC);
+
+CREATE TABLE mts_web.rpath_stat(
+	rpath text,
+	ddate date,
+	cnt counter,
+	PRIMARY KEY (rpath, ddate)
+) WITH CLUSTERING ORDER BY ( ddate DESC);
+
+
+select * from mts_web.comm;
+
+select * from mts_web.ddate_stat;
+
+select * from mts_web.uid_stat;
+
+select * from mts_web.rpath_stat;
+

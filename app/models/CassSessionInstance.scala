@@ -24,7 +24,11 @@ object CassSessionInstance extends CassSession{
   private val prepLastTickTs :BoundStatement = prepareSql(sess,sqlLastTickTs)
   private val prepBarsBwsCodeStats :BoundStatement = prepareSql(sess,sqlBarsBwsCodeStats)
   private val prepBarByDateTs :BoundStatement = prepareSql(sess,sqlBarByDateTs)
-
+  //groups of queries for save web clients stats.
+  private val prepSaveStatComm :BoundStatement = prepareSql(sess,sqlSaveStatComm)
+  private val prepSaveStatDdate :BoundStatement = prepareSql(sess,sqlSaveStatDdate)
+  private val prepSaveStatUid :BoundStatement = prepareSql(sess,sqlSaveStatUid)
+  private val prepSaveStatRPath :BoundStatement = prepareSql(sess,sqlSaveStatRPath)
 
   private def tickersDictReader: Seq[Ticker] = sess.execute(prepTickersDict).all().iterator.asScala
     .map(rowToTicker).toList.filter(tck => tck.tickerId < 30).sortBy(_.tickerId)
@@ -94,6 +98,20 @@ object CassSessionInstance extends CassSession{
 
     val seqLastBars :Seq[LastBar] = Await.result(Future.sequence(seqLastBarsFuts), Duration.Inf).flatten
     seqLastBars
+  }
+
+
+  def saveClientLog(logRow :clientRow) ={
+    sess.execute(prepSaveStatComm
+      .setString("uid",logRow.clientSessionId)
+      .setString("uip",logRow.remoteAddress)
+      .setString("rpath",logRow.routerPath)
+      .setString("cntrl",logRow.routerController)
+      .setString("mth",logRow.routerMethod)
+    )
+    sess.executeAsync(prepSaveStatDdate)
+    sess.executeAsync(prepSaveStatUid.setString("uid",logRow.clientSessionId))
+    sess.executeAsync(prepSaveStatRPath.setString("rpath",logRow.routerPath))
   }
 
 

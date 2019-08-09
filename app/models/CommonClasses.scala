@@ -43,3 +43,11 @@ case class LastBar(
 }
 
 case class TickerFailBwsCnt(tickerId  :Int,failCnt :Int)
+
+case class clientRow(
+                      clientSessionId: String,
+                      remoteAddress: String,
+                      routerPath: String,
+                      routerController: String,
+                      routerMethod: String,
+                    )

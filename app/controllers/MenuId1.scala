@@ -4,24 +4,22 @@ import app.Global
 import javax.inject._
 import models.{CommonFuncs, Ticker, TickerWithDdateTs}
 import play.api.Logger
-import play.api.libs.typedmap.TypedMap
 import play.api.mvc._
 
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 @Singleton
 class MenuId1 @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsFinder)
   extends AbstractController(cc) with CommonFuncs {
   val log: Logger = Logger(this.getClass())
+  val thisCntrlMid :Int = 1
   log.info("Constructor "+this.getClass.getName)
 
   def midAction = Action {implicit request =>
     log.info(this.getClass.getName+" mid1")
-
-    val newAttrs :TypedMap = Global.reqLog.saveLog(request)
-    request.withAttrs(newAttrs)
+    val uid :String = Global.reqLog.saveLog(request)
 
     val sess  = Global.sessInstance
     val tickersFrx :Seq[Ticker] = sess.tickersDict
@@ -53,7 +51,9 @@ class MenuId1 @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsF
 
     val durrS :Double = (System.currentTimeMillis-t1).toDouble/1000.toDouble
     log.info(s"Duration $durrS s. seqTickersDdateTs size=${seqTickersDdateTs.size}")
-    Ok(views.html.mid1("mid1",1,seqTickersDdateTs,currentDateTime)).withSession(request.session + ("mid" -> "1"))
+
+    Ok(views.html.mid1("mid"+thisCntrlMid.toString,thisCntrlMid,seqTickersDdateTs,currentDateTime))
+      .withSession(request.session + ("mid" -> thisCntrlMid.toString) + ("uid" -> uid))
   }
 
 }

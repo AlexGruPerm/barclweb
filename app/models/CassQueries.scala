@@ -7,9 +7,6 @@ trait CassQueries {
   val sqlLastTickDdate = "select ddate from mts_src.ticks_count_days where ticker_id = :tickerId limit 1"
   val sqlLastTickTs = "select db_tsunx from mts_src.ticks where ticker_id = :tickerId and ddate= :pDdate limit 1"
 
-  /**
-    * ticker_id | bar_width_sec | ddate      | curr_ts       | cnt | ts_end_max    | ts_end_min
-  */
   val sqlBarsBwsCodeStats = "select * from mts_bars.bars_bws_dates where ticker_id = :tickerID and bar_width_sec=:bws limit 1"
 
   val sqlBarByDateTs =
@@ -18,8 +15,18 @@ trait CassQueries {
       |  where ticker_id=:tickerID and
       |        bar_width_sec=:bws and
       |        ddate=:pDdate and
-      |        ts_end=:ts
-      |        allow filtering """.stripMargin
+      |        ts_end=:ts """.stripMargin
+
+  val sqlSaveStatComm =
+    """insert into mts_web.comm(ddate,ts,uid,uip,rpath,cntrl,mth)
+      |         values(toDate(now()), toUnixTimestamp(now()),:uid,:uip,:rpath,:cntrl,:mth) """.stripMargin
+
+  val sqlSaveStatDdate = "update mts_web.ddate_stat set cnt=cnt+1 where ddate=toDate(now()) "
+
+  val sqlSaveStatUid = "update mts_web.uid_stat set cnt=cnt+1 where uid=:uid and ddate=toDate(now()) "
+
+  val sqlSaveStatRPath = "update mts_web.rpath_stat set cnt=cnt+1 where rpath=:rpath and ddate=toDate(now()) "
+
 
 }
 
