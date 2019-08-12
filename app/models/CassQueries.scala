@@ -27,6 +27,12 @@ trait CassQueries {
 
   val sqlSaveStatRPath = "update mts_web.rpath_stat set cnt=cnt+1 where rpath=:rpath and ddate=toDate(now()) "
 
+  val sqlSeqSimpleBars = """   select ts_end,o,h,l,c
+                           |     from mts_bars.bars
+                           |    where ticker_id         = :tickerID and
+                           |              ddate         = :pDdate and
+                           |              bar_width_sec = :bws
+                           |   limit :plimit """.stripMargin
 
 }
 

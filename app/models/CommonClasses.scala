@@ -40,6 +40,9 @@ case class LastBar(
   val diffSecondsToLastTick = tickerWithDts.dbTsunx/1000L - tsEnd/1000L
   val isFail :Int = if (diffSecondsToLastTick > bws) 1 else 0
   def getTickerId :Int = tickerWithDts.ticker.tickerId
+  val rYear :Int = ddate.getYear
+  val rMon :Int = ddate.getMonthValue
+  val rDay :Int = ddate.getDayOfMonth
 }
 
 case class TickerFailBwsCnt(tickerId  :Int,failCnt :Int)

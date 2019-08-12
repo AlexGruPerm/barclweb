@@ -6,10 +6,10 @@ import com.datastax.oss.driver.api.core.CqlSession
 import com.datastax.oss.driver.api.core.cql.BoundStatement
 import models.CommRowConverters._
 
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration.Duration
-import scala.jdk.CollectionConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
+import scala.jdk.CollectionConverters._
 
 object CassSessionInstance extends CassSession{
 
@@ -29,6 +29,8 @@ object CassSessionInstance extends CassSession{
   private val prepSaveStatDdate :BoundStatement = prepareSql(sess,sqlSaveStatDdate)
   private val prepSaveStatUid :BoundStatement = prepareSql(sess,sqlSaveStatUid)
   private val prepSaveStatRPath :BoundStatement = prepareSql(sess,sqlSaveStatRPath)
+
+  private val prepSeqSimpleBars :BoundStatement = prepareSql(sess,sqlSeqSimpleBars)
 
   private def tickersDictReader: Seq[Ticker] = sess.execute(prepTickersDict).all().iterator.asScala
     .map(rowToTicker).toList.filter(tck => tck.tickerId < 30).sortBy(_.tickerId)
@@ -114,8 +116,19 @@ object CassSessionInstance extends CassSession{
     sess.executeAsync(prepSaveStatRPath.setString("rpath",logRow.routerPath))
   }
 
-
-
+  def getBarsForGraph(tickerid: Int, barwidthsec :Int, deeplimit:Int, pDdate :LocalDate) :Seq[BarSimple] =
+    sess.execute(prepSeqSimpleBars
+        .setInt("tickerID",tickerid)
+        .setInt("bws",barwidthsec)
+        .setLocalDate("pDdate", pDdate)
+        .setInt("plimit",deeplimit)).all().iterator().asScala.toSeq
+      .map(row => new BarSimple(
+        row.getLong("ts_end"),
+        row.getDouble("o"),
+        row.getDouble("h"),
+        row.getDouble("l"),
+        row.getDouble("c")
+      ))
 
   trait Factory {
     def apply(): CassSessionInstance.type
