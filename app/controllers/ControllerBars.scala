@@ -14,7 +14,10 @@ class ControllerBars @Inject()(cc: ControllerComponents)(implicit assetsFinder: 
   extends AbstractController(cc) with CommonFuncs {
   val log: Logger = Logger(this.getClass())
 
-  def  getJsonBarsByTickerWidthDeep(tickerid: Int, barwidthsec :Int, deeplimit:Int, pddate :String)= Action {
+  def  getJsonBarsByTickerWidthDeep(tickerid: Int, barwidthsec :Int, deeplimit:Int, pddate :String)= Action {implicit request =>
+    log.info(this.getClass.getName+" getJsonBarsByTickerWidthDeep")
+    val uid :String = Global.reqLog.saveLog(request)
+
     val sess  = Global.sessInstance
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     val lDate :LocalDate = LocalDate.parse(pddate, formatter);

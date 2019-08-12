@@ -283,9 +283,6 @@ function funcOnClickTbar(elmnt) {
 
 }
 
-
-
-
 function timeConverter(UNIX_timestamp){
   var a = new Date(UNIX_timestamp);
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -298,7 +295,6 @@ function timeConverter(UNIX_timestamp){
   var time = hour + ':' + min + ':' + sec ;//date + '.' + (a.getMonth()+1) + '.' + year + ' ' + hour + ':' + min + ':' + sec ;
   return time;
 }
-
 
 function paintJQBarsGraph(series,widthSec){
       //console.log("function paintJQBarsGraph");
@@ -338,7 +334,6 @@ function paintJQBarsGraph(series,widthSec){
 			alreadyFetched[series.label] = true;
 			data.push(series);
 		}
-
 		$.plot("#placeholder", data, options);
 }
 
