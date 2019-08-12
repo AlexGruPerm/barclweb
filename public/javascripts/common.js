@@ -254,6 +254,9 @@ function postAjax(url, data, success) {
 /*===========================================================================================================*/
 
 function funcOnClickTbar(elmnt) {
+
+
+
       console.log("Selected line TR id="+elmnt.id);
        var partsOfStr = elmnt.id.split('-');
          var bPattCnt  = 30;
@@ -263,6 +266,12 @@ function funcOnClickTbar(elmnt) {
          var pDateMon  = partsOfStr[4].padStart(2,'0');
          var pDateDay  = partsOfStr[5].padStart(2,'0')
          var fullDate  = pDateYear+"-"+pDateMon+"-"+pDateDay
+
+          var thisTickerImg = document.getElementById("wimg-bws-"+tickerId)
+          if (thisTickerImg != null){
+            thisTickerImg.style.visibility = 'visible';
+          }
+
          /*
          console.log("tickerId="+tickerId);
          console.log("widthSec="+widthSec);
@@ -278,6 +287,10 @@ function funcOnClickTbar(elmnt) {
            console.log("i=["+i+"] ts_end="+data["data"][i][0]+"  DateTime="+ timeConverter(data["data"][i][0]) +" c="+data["data"][i][1]);
          }
          */
+          if (thisTickerImg != null){
+            thisTickerImg.style.visibility = 'hidden';
+          }
+
          paintJQBarsGraph(data,widthSec);
         });
 

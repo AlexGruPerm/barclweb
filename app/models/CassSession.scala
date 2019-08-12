@@ -20,7 +20,9 @@ trait CassSession extends CassQueries {
   def createSession(node :String,dc :String,port :Int = 9042) :CqlSession =
     CqlSession.builder()
       .addContactPoint(new InetSocketAddress(node, port))
-      .withLocalDatacenter(dc).build()
+      .withLocalDatacenter(dc)
+      .build()
+
 
   def prepareSql(sess :CqlSession,sqlText :String) :BoundStatement =
     try {
