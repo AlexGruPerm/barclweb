@@ -17,6 +17,7 @@ object CassSessionInstance extends CassSession{
   log.info("CassSessionInstance DB Address : "+node+" - "+dc)
   val sess :CqlSession = createSession(node,dc)
   log.info("CassSessionInstance session is connected = " + !sess.isClosed)
+  Thread.sleep(5000)
 
   private val prepTickersDict: BoundStatement = prepareSql(sess, sqlTickersDict)
   private val prepBCalcProps :BoundStatement = prepareSql(sess,sqlBCalcProps)
@@ -38,7 +39,7 @@ object CassSessionInstance extends CassSession{
   def tickersDict = tickersDist
 
   def getAllBarsPropertiesReader : Seq[BarCalcProperty] = sess.execute(prepBCalcProps).all().iterator.asScala
-    .map(rowToBarCalcProperty).toList.filter(bp => bp.isEnabled==1)
+    .map(rowToBarCalcProperty).toList.filter(bp => bp.isEnabled == 1)
   lazy private val seqBarsProperties :Seq[BarCalcProperty] = getAllBarsPropertiesReader
   def getAllBarsProperties = seqBarsProperties
 
