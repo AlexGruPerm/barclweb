@@ -28,7 +28,7 @@ class HomeController @Inject()(cc: ControllerComponents) (implicit assetsFinder:
         case 3 => routes.MenuId3.midAction
         case 4 => routes.MenuId4.midAction
         case 5 => routes.MenuId5.midAction
-        case _ => routes.MenuId1.midAction
+        case _ => routes.MenuId2.midAction
       }
     )
     /*

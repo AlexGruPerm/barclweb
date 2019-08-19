@@ -15,7 +15,7 @@ trait CassQueries {
       |  where ticker_id=:tickerID and
       |        bar_width_sec=:bws and
       |        ddate=:pDdate and
-      |        ts_end=:ts """.stripMargin
+      |        ts_end=:ts  """.stripMargin
 
   val sqlSaveStatComm =
     """insert into mts_web.comm(ddate,ts,uid,uip,rpath,cntrl,mth)

@@ -27,9 +27,14 @@ class Bars @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsFind
             case Some(tickersArray) => {
               val seqTickers :Seq[Int] =  tickersArray.value.map(v => v.as[String].toInt).toSeq
               log.info("seqTickers="+seqTickers)
-
               val t1 = System.currentTimeMillis
               val seqLastBars :Seq[LastBar] = sess.getLastBarsByTickers(seqTickers)
+
+              val dataTickerBwsFails :Seq[TickerFailBwsCnt] = seqLastBars.map(tb => tb.tickerWithDts.ticker.tickerId)
+                .distinct
+                .iterator.map(thisTickerId => TickerFailBwsCnt(thisTickerId,
+                seqLastBars.count(elm => elm.tickerWithDts.ticker.tickerId==thisTickerId && elm.isFail==1))).toSeq
+
               val durrS :Double = (System.currentTimeMillis-t1).toDouble/1000.toDouble
               log.info(s"Duration $durrS s. seqLastBars size=${seqLastBars.size}")
 

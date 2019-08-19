@@ -96,9 +96,9 @@ function funcOnClick(event) {
       var obj =  (event.currentTarget == null) ? event  : event.currentTarget;
       var tickerId  = obj.id.split('-')[3];
       console.log("funcOnClick tickerId = "+tickerId+" isSingleTicker = "+isSingleTicker);
-      tickerCalcFailBws(tickerId);
+      console.log("we close it here, FIRST CALL. CALC IT FROM NEXT CALL RESULTS.")
+      //tickerCalcFailBws(tickerId);
             if (isSingleTicker == 1) {
-                console.log("Next ...");
                 funcOnClickUnSelAllButton();
                 console.log("select this ticker")
                 obj.className = "tr-ticker-selected"
@@ -118,7 +118,7 @@ function funcOnClick(event) {
  This function calls when we click on tr with tickers.
 */
 function tickerCalcFailBws(tickerid) {
-    //console.log("tickerCalcFailBws for ticker="+tickerid)
+    console.log("tickerCalcFailBws for ticker="+tickerid +" remoe this CALL ")
      var thisTickerImg = document.getElementById("wimg-ticker-"+tickerid)
      if (thisTickerImg!=null){
        thisTickerImg.style.visibility = 'visible';
@@ -129,7 +129,7 @@ function tickerCalcFailBws(tickerid) {
        divFail.innerHTML = data.failcnt
        tdFail.className = (data.failcnt != "0") ? "td-ticker-fail" : "td-ticker"
        if (thisTickerImg!=null){
-        thisTickerImg.style.visibility = 'hidden';
+        thisTickerImg.style.visibility =  'hidden';
        }
       });
 }
@@ -176,6 +176,77 @@ function tickerCalcFailBwsA() {
 }
 
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+function onlyUnique(value, index, self) {
+  //remove header empty TR.
+  if (index != 0) {
+    return self.indexOf(value) === index;
+  }
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+function funcRecalcFailBws(){
+ console.log("-------------------------------------");
+ console.log("inside funcRecalcFailBws");
+ var tblTrs = document.getElementById("tickers-bws-common").getElementsByTagName('tr');
+
+  var tiskers = [].map.call(tblTrs, function(obj) {
+    if (obj.id){
+     return obj.id.split('-')[1];
+    } else {
+      return "0";
+    }
+  }).filter(onlyUnique);
+
+  var tickersTable = document.querySelector('#tickers-common');
+
+  console.log("tiskers array = "+tiskers);
+
+   for (var i = 0; i < tiskers.length; i++) {
+     var thisTickerId = tiskers[i];
+     var cntFail = document.querySelectorAll('tr[id^=tickerbws-'+thisTickerId+'].tr-tickerbws-fail');
+     var failCnt = cntFail.length;
+     console.log("  > INSIDE LOOP tickerID = "+thisTickerId+" failCnt="+failCnt);
+
+     var tdForThisTickerId = tickersTable.querySelectorAll('td[id^=td-ticker-fail-bws-'+thisTickerId+']');
+
+     console.log(" INFO:  tdForThisTickerId.length != 1  tdForThisTickerId.length="+tdForThisTickerId.length);
+
+     //todo: remove it, just for debug
+     for (var j = 0; j < tdForThisTickerId.length; j++) {
+      console.log(" debug loop : "+tdForThisTickerId[i].id);
+     }
+
+     if (tdForThisTickerId.length == 1){
+       if (failCnt == 0) {
+        console.log("set class td-ticker");
+        tdForThisTickerId[0].className = 'td-ticker';
+       } else {
+        console.log("set class td-ticker-fail");
+        tdForThisTickerId[0].className = 'td-ticker-fail';
+       }
+     } else {
+      console.log(" error:  tdForThisTickerId.length != 1  tdForThisTickerId.length="+tdForThisTickerId.length);
+     }
+
+     var spanForTickerId   = tickersTable.querySelectorAll('span[id^=span-ticker-fail-bws-'+thisTickerId+']');
+     if (spanForTickerId.length == 1){
+       console.log("  > UPDATE FAIL BWS COUNT = "+ failCnt+" for tickerID="+thisTickerId);
+       if (spanForTickerId != null) {
+        spanForTickerId[0].innerHTML = failCnt;
+        console.log("   > updated span with id = "+spanForTickerId[0].id);
+       } else {
+        console.log("!!! can not find span for tickerID = "+thisTickerId);
+       }
+     }
+   }
+   console.log("-------------------------------------");
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+
 function funcOnClickExecButton() {
   console.log("EXECUTE BUTTON");
   var selectedTickersTr = document.getElementById("tickers-common").getElementsByClassName('tr-ticker-selected');
@@ -184,11 +255,12 @@ function funcOnClickExecButton() {
      tickersSelectedArray[i] = selectedTickersTr[i].id.split('-')[3];
    };
   if (tickersSelectedArray.length!=0){
-  console.log("Selected tickersID = "+tickersSelectedArray);
+  console.log("Selected tickersID = "+tickersSelectedArray+" in BWS table.");
 //---------------------------------------------------------------------------
     postAjax('/barsstat',{"tickersId":tickersSelectedArray}, function(data){
-      //console.log(data);
       document.getElementById("div-bars-stats").innerHTML = data;
+      // call function that calculate fail bws counts for each ticker in ajax response.
+      funcRecalcFailBws();
     });
 //---------------------------------------------------------------------------
   } else {
@@ -255,8 +327,6 @@ function postAjax(url, data, success) {
 
 function funcOnClickTbar(elmnt) {
 
-
-
       console.log("Selected line TR id="+elmnt.id);
        var partsOfStr = elmnt.id.split('-');
          var bPattCnt  = 30;
@@ -267,8 +337,9 @@ function funcOnClickTbar(elmnt) {
          var pDateDay  = partsOfStr[5].padStart(2,'0')
          var fullDate  = pDateYear+"-"+pDateMon+"-"+pDateDay
 
-          var thisTickerImg = document.getElementById("wimg-bws-"+tickerId)
+          var thisTickerImg = document.getElementById("wimg-bws-"+tickerId);
           if (thisTickerImg != null){
+            console.log("make IMG visible");
             thisTickerImg.style.visibility = 'visible';
           }
 
@@ -288,6 +359,7 @@ function funcOnClickTbar(elmnt) {
          }
          */
           if (thisTickerImg != null){
+            console.log("make IMG hidden");
             thisTickerImg.style.visibility = 'hidden';
           }
 

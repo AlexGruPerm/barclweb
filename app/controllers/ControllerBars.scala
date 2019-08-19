@@ -28,10 +28,13 @@ class ControllerBars @Inject()(cc: ControllerComponents)(implicit assetsFinder: 
       def writes(bar: BarSimple) = Json.toJson(bar.getTsEndFull,bar.c)
     }
 
+    Thread.sleep(5000)
+
     val jres =Json.obj(
       "label" -> ("TICKER_ID="+tickerid),
       "data" -> bars
     )
+
     //log.info(jres.toString())
     Ok(jres)
   }

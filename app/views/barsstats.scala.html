@@ -10,9 +10,6 @@
         <td class="tbws">DIFF TO LASTTICK(sec.)</td>
     </tr>
     @for(t <- seqTickersBws){
-    @*
-    id="tickerbws-1-30-2019-08-12"
-    *@
     <tr id="tickerbws-@t.tickerWithDts.ticker.tickerId-@t.bws-@t.rYear-@t.rMon-@t.rDay" class="@{ if (t.isFail==1) {"tr-tickerbws-fail"} else {"tr-tickerbws"}}"  onclick="funcOnClickTbar(this)" >
         <td class="tbws">@t.tickerWithDts.ticker.tickerCode
             <img id="wimg-bws-@t.tickerWithDts.ticker.tickerId" align="middle" border="0" hspace="0" vspace="0" style="display: none;" src="@routes.Assets.at("images/intro.gif")" />
