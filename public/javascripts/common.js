@@ -188,7 +188,7 @@ function onlyUnique(value, index, self) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 function funcRecalcFailBws(){
- console.log("-------------------------------------");
+ //console.log("-------------------------------------");
  console.log("inside funcRecalcFailBws");
  var tblTrs = document.getElementById("tickers-bws-common").getElementsByTagName('tr');
 
@@ -202,47 +202,60 @@ function funcRecalcFailBws(){
 
   var tickersTable = document.querySelector('#tickers-common');
 
-  console.log("tiskers array = "+tiskers);
+  /*
+  console.log("tiskers array = "+tiskers+" LENGTH="+tiskers.length);
+  for (var k = 0; k < tiskers.length; k++) {
+   console.log("k = "+k+" tiskers["+k+"] = "+tiskers[k]);
+  }
+  */
 
    for (var i = 0; i < tiskers.length; i++) {
      var thisTickerId = tiskers[i];
      var cntFail = document.querySelectorAll('tr[id^=tickerbws-'+thisTickerId+'].tr-tickerbws-fail');
      var failCnt = cntFail.length;
-     console.log("  > INSIDE LOOP tickerID = "+thisTickerId+" failCnt="+failCnt);
+     //console.log("  > INSIDE LOOP tickerID = "+thisTickerId+" failCnt="+failCnt);
 
-     var tdForThisTickerId = tickersTable.querySelectorAll('td[id^=td-ticker-fail-bws-'+thisTickerId+']');
-
-     console.log(" INFO:  tdForThisTickerId.length != 1  tdForThisTickerId.length="+tdForThisTickerId.length);
+     /*
+     Three additional attribute selectors are provided for matching substrings in the value of an attribute:
+     [att^=val] Represents an element with the att attribute whose value begins with the prefix "val".
+     [att$=val] Represents an element with the att attribute whose value ends with the suffix "val".
+     [att*=val] Represents an element with the att attribute whose value contains at least one instance of the substring "val".
+     */
+     //var tdForThisTickerId = tickersTable.querySelectorAll('td[id^=td-ticker-fail-bws-'+thisTickerId+']');
+     var tdForThisTickerId = tickersTable.querySelectorAll('td[id$=td-ticker-fail-bws-'+thisTickerId+']');
+     //console.log(" INFO:  tdForThisTickerId.length != 1  tdForThisTickerId.length="+tdForThisTickerId.length);
 
      //todo: remove it, just for debug
+     /*
      for (var j = 0; j < tdForThisTickerId.length; j++) {
-      console.log(" debug loop : "+tdForThisTickerId[i].id);
+      console.log(" debug loop : "+tdForThisTickerId[j].id);
      }
+     */
 
      if (tdForThisTickerId.length == 1){
        if (failCnt == 0) {
-        console.log("set class td-ticker");
+        //console.log("set class td-ticker");
         tdForThisTickerId[0].className = 'td-ticker';
        } else {
-        console.log("set class td-ticker-fail");
+        //console.log("set class td-ticker-fail");
         tdForThisTickerId[0].className = 'td-ticker-fail';
        }
      } else {
       console.log(" error:  tdForThisTickerId.length != 1  tdForThisTickerId.length="+tdForThisTickerId.length);
      }
 
-     var spanForTickerId   = tickersTable.querySelectorAll('span[id^=span-ticker-fail-bws-'+thisTickerId+']');
+     var spanForTickerId   = tickersTable.querySelectorAll('span[id$=span-ticker-fail-bws-'+thisTickerId+']');
      if (spanForTickerId.length == 1){
-       console.log("  > UPDATE FAIL BWS COUNT = "+ failCnt+" for tickerID="+thisTickerId);
+       //console.log("  > UPDATE FAIL BWS COUNT = "+ failCnt+" for tickerID="+thisTickerId);
        if (spanForTickerId != null) {
         spanForTickerId[0].innerHTML = failCnt;
-        console.log("   > updated span with id = "+spanForTickerId[0].id);
+        //console.log("   > updated span with id = "+spanForTickerId[0].id);
        } else {
         console.log("!!! can not find span for tickerID = "+thisTickerId);
        }
      }
    }
-   console.log("-------------------------------------");
+   //console.log("-------------------------------------");
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
