@@ -31,8 +31,7 @@ trait CassQueries {
                            |     from mts_bars.bars
                            |    where ticker_id         = :tickerID and
                            |              ddate         = :pDdate and
-                           |              bar_width_sec = :bws
-                           |   limit :plimit """.stripMargin
+                           |              bar_width_sec = :bws  """.stripMargin //limit :plimit
 
 }
 

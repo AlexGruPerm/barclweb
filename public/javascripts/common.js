@@ -64,6 +64,7 @@ if (document.getElementById("issingles") !== null) {
 const chboxIsSingle = document.getElementById("issingles")
   chboxIsSingle.addEventListener("change", (event) => {
 
+ if (document.getElementById("tickers-common") != null) {
    if (event.target.checked) {
     isSingleTicker = 1
     console.log("checked isSingleTicker="+isSingleTicker)
@@ -86,6 +87,7 @@ const chboxIsSingle = document.getElementById("issingles")
     document.getElementById("selalltickers").style.visibility = 'visible';
     document.getElementById("unselalltickers").style.visibility = 'visible';
    }
+  }
 
   });
 };
@@ -319,11 +321,6 @@ function funcOnClickUnSelAllButton() {
 }
 
 
-
-
-
-
-
 function postAjax(url, data, success) {
     var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     xhr.open('POST', url);
@@ -339,7 +336,6 @@ function postAjax(url, data, success) {
 /*===========================================================================================================*/
 
 function funcOnClickTbar(elmnt) {
-
       console.log("Selected line TR id="+elmnt.id);
        var partsOfStr = elmnt.id.split('-');
          var bPattCnt  = 30;
@@ -355,7 +351,6 @@ function funcOnClickTbar(elmnt) {
             console.log("make IMG visible");
             thisTickerImg.style.visibility = 'visible';
           }
-
          /*
          console.log("tickerId="+tickerId);
          console.log("widthSec="+widthSec);
@@ -363,22 +358,11 @@ function funcOnClickTbar(elmnt) {
          console.log("bDdate="+fullDate);
          console.log("------------------------");
          */
-         ajax_get('/getbars/'+tickerId+'/'+widthSec+'/'+bPattCnt+'/'+fullDate, function(data) {
-         /*
-         console.log("JSON data.rows="+ data["data"].length);
-         document.getElementById("div-test").innerHTML = data;
-         for (var i=0; i < data["data"].length; i++) {
-           console.log("i=["+i+"] ts_end="+data["data"][i][0]+"  DateTime="+ timeConverter(data["data"][i][0]) +" c="+data["data"][i][1]);
-         }
-         */
-          if (thisTickerImg != null){
-            console.log("make IMG hidden");
-            thisTickerImg.style.visibility = 'hidden';
-          }
-
-         paintJQBarsGraph(data,widthSec);
-        });
-
+          var barsUrl = '/getbarsg/'+tickerId+'/'+widthSec+'/'+bPattCnt+'/'+fullDate
+           console.log("GET BARS = "+barsUrl);
+           ajax_get(barsUrl, function(respData) {
+           showBars(respData.data, respData.title);
+          });
 }
 
 function timeConverter(UNIX_timestamp){
@@ -408,13 +392,9 @@ function paintJQBarsGraph(series,widthSec){
 				show: true
 			},
 			xaxis: {
-				//tickDecimals: 0,
-				//tickSize:     1000
 				  minTickSize: [1, "minute"],
-                  //min: (new Date("2018-08-13Z14:57:00")).getTime(),
-                  //max: (new Date("2018-08-13Z15:05:00")).getTime(),
 				  mode: "time",
-                  timeformat: "%H:%M:%S"//"%d.%m.%Y %H:%M:%S"
+                  timeformat: "%H:%M:%S"
 			},
 			yaxes:  { position: "right" }
 		};
@@ -465,8 +445,6 @@ $("#placeholder").bind("plothover", function (event, pos, item) {
 		});
 });
 
-
-
 function ajax_get(url, callback) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -485,7 +463,25 @@ function ajax_get(url, callback) {
     xmlhttp.send();
 }
 
-
+function showBars(data,graphTitle){
+  Highcharts.stockChart('hscontainer', {
+    title: {text: graphTitle},
+    rangeSelector: {
+      enabled:false
+    },
+     navigator: {
+      enabled: false
+    },
+     tooltip: {
+      split: false
+    },
+    series: [{
+      type: 'candlestick',
+      data: data,
+      name: graphTitle
+    }]
+  });
+}
 
 
 

@@ -122,14 +122,15 @@ object CassSessionInstance extends CassSession{
         .setInt("tickerID",tickerid)
         .setInt("bws",barwidthsec)
         .setLocalDate("pDdate", pDdate)
-        .setInt("plimit",deeplimit)).all().iterator().asScala.toSeq
+        //.setInt("plimit",deeplimit)
+    ).all().iterator().asScala.toSeq
       .map(row => new BarSimple(
-        row.getLong("ts_end"),
+        row.getLong("ts_end") + 18000000L,//todo: ??? +18000000L, plus 5 hours to UTC. Rewrite correctness.
         row.getDouble("o"),
         row.getDouble("h"),
         row.getDouble("l"),
         row.getDouble("c")
-      ))
+      )).sortBy(elm => elm.ts_end)
 
   trait Factory {
     def apply(): CassSessionInstance.type

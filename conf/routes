@@ -5,7 +5,7 @@ GET     /mid3                                               controllers.MenuId3.
 GET     /mid4                                               controllers.MenuId4.midAction
 GET     /mid5                                               controllers.MenuId5.midAction
 GET     /assets/*file                                       controllers.Assets.at(path="/public", file)
-GET     /getbars/:tickerid/:barwidthsec/:deeplimit/:pddate  controllers.ControllerBars.getJsonBarsByTickerWidthDeep(tickerid: Int, barwidthsec :Int, deeplimit:Int, pddate :String)
+GET     /getbarsg/:tickerid/:barwidthsec/:deeplimit/:pddate  controllers.ControllerBars.getJsonBarsGByTickerWidthDeep(tickerid: Int, barwidthsec :Int, deeplimit:Int, pddate :String)
 + nocsrf
 POST    /barsstat              controllers.Bars.barsstat
 GET     /bwsfailcnt/:tickerid  controllers.Bars.bwsfailcnt(tickerid: Int)
